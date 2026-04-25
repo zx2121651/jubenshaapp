@@ -36,7 +36,7 @@ class HomeHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(UIConstants.radiusFull),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -51,7 +51,7 @@ class HomeHeader extends StatelessWidget {
                     '搜索剧本/门店/玩家',
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppTheme.onSurfaceVariant.withOpacity(0.8),
+                      color: AppTheme.onSurfaceVariant.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
