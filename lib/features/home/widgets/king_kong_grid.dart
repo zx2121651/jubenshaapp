@@ -38,7 +38,7 @@ class KingKongGrid extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryContainer.withOpacity(0.15),
+                  color: AppTheme.primaryContainer.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

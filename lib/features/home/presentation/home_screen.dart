@@ -8,7 +8,6 @@ import '../widgets/home_header.dart';
 import '../widgets/king_kong_grid.dart';
 import '../widgets/sticky_tab_bar.dart';
 import '../widgets/script_card.dart';
-import '../../../shared/widgets/custom_bottom_nav_bar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -18,8 +17,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     final scripts = ref.watch(scriptListProvider);
@@ -51,16 +48,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            if (index != 2) { // 2 is the add button
-              _currentIndex = index;
-            }
-          });
-        },
       ),
     );
   }
