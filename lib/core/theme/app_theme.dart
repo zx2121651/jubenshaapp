@@ -1,20 +1,42 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Crimson Verse Palette
-  static const Color primary = Color(0xFFBA0028);
-  static const Color primaryContainer = Color(0xFFFF7577);
-  static const Color background = Color(0xFFF5F5F5);
-  static const Color surface = Color(0xFFF6F6F6);
-  static const Color surfaceContainerLow = Color(0xFFF0F1F1);
-  static const Color surfaceContainerLowest = Color(0xFFFFFFFF);
-  static const Color onSurface = Color(0xFF2D2F2F);
-  static const Color onSurfaceVariant = Color(0xFF5A5C5C);
+  // Dark Theme Palette matching the screenshot
+  static const Color background = Color(0xFF161824); // Very dark blue/grey
+  static const Color surface = Color(0xFF1F212D);
+  static const Color surfaceContainerLow = Color(0xFF262836);
+  static const Color surfaceContainerLowest = Color(0xFF161824);
 
-  static final ThemeData lightTheme = ThemeData(
+  static const Color primary = Color(0xFFFF3366);
+  static const Color primaryContainer = Color(0xFFFF7577);
+
+  static const Color onSurface = Color(0xFFFFFFFF);
+  static const Color onSurfaceVariant = Color(0xFFA0A0AA);
+
+  // Card gradients
+  static const Gradient playScriptGradient = LinearGradient(
+    colors: [Color(0xFFE0FFFF), Color(0xFFB3E5FC)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient liveActionGradient = LinearGradient(
+    colors: [Color(0xFFFFE4FA), Color(0xFFFFC4F0)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient tenMinScriptGradient = LinearGradient(
+    colors: [Color(0xFFFFFFD9), Color(0xFFE8F5C8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static final ThemeData darkTheme = ThemeData(
     useMaterial3: true,
+    brightness: Brightness.dark,
     scaffoldBackgroundColor: background,
-    colorScheme: const ColorScheme.light(
+    colorScheme: const ColorScheme.dark(
       primary: primary,
       primaryContainer: primaryContainer,
       surface: surface,
@@ -30,22 +52,21 @@ class AppTheme {
         color: onSurface,
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        fontFamily: 'Inter',
       ),
     ),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontFamily: 'Manrope', color: onSurface),
-      headlineMedium: TextStyle(fontFamily: 'Manrope', color: onSurface, fontWeight: FontWeight.bold),
-      bodyLarge: TextStyle(fontFamily: 'Inter', color: onSurface),
-      bodyMedium: TextStyle(fontFamily: 'Inter', color: onSurface),
-      labelSmall: TextStyle(fontFamily: 'Inter', color: onSurfaceVariant),
+      displayLarge: TextStyle(color: onSurface),
+      headlineMedium: TextStyle(color: onSurface, fontWeight: FontWeight.bold),
+      bodyLarge: TextStyle(color: onSurface),
+      bodyMedium: TextStyle(color: onSurface),
+      labelSmall: TextStyle(color: onSurfaceVariant),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: surfaceContainerLowest,
-      selectedItemColor: primary,
+      backgroundColor: surface,
+      selectedItemColor: onSurface,
       unselectedItemColor: onSurfaceVariant,
       type: BottomNavigationBarType.fixed,
-      elevation: 8,
+      elevation: 0,
     ),
   );
 }

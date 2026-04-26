@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
-import '../data/mock_data_provider.dart';
-import '../widgets/home_header.dart';
-import '../widgets/king_kong_grid.dart';
-import '../widgets/sticky_tab_bar.dart';
-import '../widgets/script_card.dart';
+import '../widgets/home_profile_header.dart';
+import '../widgets/home_feature_icons.dart';
+import '../widgets/home_banner.dart';
+import '../widgets/home_play_section.dart';
+import '../widgets/home_feed_list.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -19,58 +18,42 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final scripts = ref.watch(scriptListProvider);
-
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const SliverToBoxAdapter(child: HomeHeader()),
-            const SliverToBoxAdapter(child: KingKongGrid()),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _StickyTabBarDelegate(
-                child: const StickyTabBar(),
-              ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingSm),
+            ),
+            const SliverToBoxAdapter(child: HomeProfileHeader()),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
+            const SliverToBoxAdapter(child: HomeFeatureIcons()),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
+            const SliverToBoxAdapter(child: HomeBanner()),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
+            const SliverToBoxAdapter(child: HomePlaySection()),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingXl),
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(UIConstants.spacingLg),
-              sliver: SliverMasonryGrid.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: UIConstants.spacingLg,
-                crossAxisSpacing: UIConstants.spacingLg,
-                childCount: scripts.length,
-                itemBuilder: (context, index) {
-                  return ScriptCard(script: scripts[index]);
-                },
+              padding: const EdgeInsets.symmetric(
+                horizontal: UIConstants.spacingLg,
               ),
+              sliver: const HomeFeedList(),
             ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 100),
+            ), // Bottom padding for nav bar
           ],
         ),
       ),
     );
-  }
-}
-
-class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-
-  _StickyTabBarDelegate({required this.child});
-
-  @override
-  double get minExtent => 50.0;
-
-  @override
-  double get maxExtent => 50.0;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  bool shouldRebuild(_StickyTabBarDelegate oldDelegate) {
-    return oldDelegate.child != child;
   }
 }

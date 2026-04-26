@@ -11,8 +11,9 @@ import '../../features/game_room/presentation/game_room_screen.dart';
 import '../../features/game_room/presentation/clue_board_screen.dart';
 import '../../shared/widgets/scaffold_with_bottom_nav_bar.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
 
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -26,10 +27,7 @@ final appRouter = GoRouter(
         // Tab 1: 首页 (Home)
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: '/',
-              builder: (context, state) => const HomeScreen(),
-            ),
+            GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
           ],
         ),
         // Tab 2: 组局 (Rooms)
