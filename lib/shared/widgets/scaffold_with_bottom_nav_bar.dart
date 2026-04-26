@@ -23,7 +23,7 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
           // Floating Tooltip
           if (navigationShell.currentIndex == 0) // Show on Home tab
             Positioned(
-              bottom: 80, // Adjust position to point to the second tab
+              bottom: 90, // Adjust position to point to the second tab
               left: MediaQuery.of(context).size.width * 0.2 + 20,
               child: _buildTooltip(),
             ),
@@ -35,7 +35,7 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: Colors.black26,
               blurRadius: 10,
               offset: Offset(0, -2),
             ),
@@ -49,40 +49,40 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
             backgroundColor: AppTheme.surface,
             indicatorColor: Colors.transparent, // Remove default indicator
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            height: 70,
+            height: 80,
             destinations: [
               _buildDestination(
                 0,
-                Icons.home_filled,
-                Icons.home_outlined,
+                Icons.face,
+                Icons.face,
                 '首页',
                 navigationShell.currentIndex == 0,
               ),
               _buildDestination(
                 1,
-                Icons.explore,
-                Icons.explore_outlined,
+                Icons.shield,
+                Icons.shield_outlined,
                 '剧本',
                 navigationShell.currentIndex == 1,
               ),
               _buildDestination(
                 2,
-                Icons.interests,
-                Icons.interests_outlined,
+                Icons.explore,
+                Icons.explore_outlined,
                 '互动',
                 navigationShell.currentIndex == 2,
               ),
               _buildDestination(
                 3,
-                Icons.message,
-                Icons.message_outlined,
+                Icons.chat_bubble,
+                Icons.chat_bubble_outline,
                 '消息',
                 navigationShell.currentIndex == 3,
               ),
               _buildDestination(
                 4,
-                Icons.person,
-                Icons.person_outline,
+                Icons.tag_faces,
+                Icons.tag_faces,
                 '我的',
                 navigationShell.currentIndex == 4,
               ),
@@ -107,7 +107,7 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
           Icon(
             isSelected ? selectedIcon : icon,
             color: isSelected ? AppTheme.onSurface : AppTheme.onSurfaceVariant,
-            size: 26,
+            size: 28,
           ),
           if (index == 0 && !isSelected) // Red dot for Home when not selected
             Positioned(
@@ -147,7 +147,7 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -163,7 +163,7 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
             '剧本上新了',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),

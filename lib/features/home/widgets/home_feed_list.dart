@@ -37,83 +37,86 @@ class HomeFeedList extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.only(bottom: UIConstants.spacingSm),
-          child: Row(
-            children: [
-              // Left part: user/tag
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: AppTheme.surfaceContainerLow,
-                  borderRadius: const BorderRadius.horizontal(
-                    left: Radius.circular(20),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    if (isSpecial)
-                      const Padding(
-                        padding: EdgeInsets.only(right: 4),
-                        child: Icon(
-                          Icons.favorite,
-                          color: AppTheme.primary,
-                          size: 14,
-                        ),
-                      ),
-                    Text(
-                      feed['user'] as String,
-                      style: const TextStyle(
-                        color: AppTheme.onSurfaceVariant,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Gap
-              const SizedBox(width: 2),
-              // Right part: message
-              Expanded(
-                child: Container(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              color: AppTheme.surfaceContainerLow,
+            ),
+            child: Row(
+              children: [
+                // Left part: user/tag
+                Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                    horizontal: 16,
+                    vertical: 10,
                   ),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceContainerLow,
-                    borderRadius: const BorderRadius.horizontal(
-                      right: Radius.circular(20),
+                  decoration: const BoxDecoration(
+                    color: Color(
+                      0xFF2E3142,
+                    ), // Slightly lighter gray than right side
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(24),
                     ),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundImage: NetworkImage(feed['avatar'] as String),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          feed['message'] as String,
-                          style: const TextStyle(
-                            color: AppTheme.onSurface,
-                            fontSize: 12,
+                      if (isSpecial)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 4),
+                          child: Icon(
+                            Icons.favorite,
+                            color: Colors.pinkAccent,
+                            size: 14,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const Icon(
-                        Icons.edit_outlined,
-                        color: AppTheme.onSurfaceVariant,
-                        size: 16,
+                      Text(
+                        feed['user'] as String,
+                        style: const TextStyle(
+                          color: AppTheme.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                // Right part: message
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 10,
+                          backgroundImage: NetworkImage(
+                            feed['avatar'] as String,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            feed['message'] as String,
+                            style: const TextStyle(
+                              color: AppTheme.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.edit_outlined,
+                          color: AppTheme.onSurfaceVariant,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }, childCount: feeds.length),

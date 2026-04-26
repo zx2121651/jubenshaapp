@@ -23,20 +23,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const SliverToBoxAdapter(child: SizedBox(height: UIConstants.spacingSm)),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingSm),
+            ),
             const SliverToBoxAdapter(child: HomeProfileHeader()),
-            const SliverToBoxAdapter(child: SizedBox(height: UIConstants.spacingLg)),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
             const SliverToBoxAdapter(child: HomeFeatureIcons()),
-            const SliverToBoxAdapter(child: SizedBox(height: UIConstants.spacingLg)),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
             const SliverToBoxAdapter(child: HomeBanner()),
-            const SliverToBoxAdapter(child: SizedBox(height: UIConstants.spacingLg)),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
             const SliverToBoxAdapter(child: HomePlaySection()),
-            const SliverToBoxAdapter(child: SizedBox(height: UIConstants.spacingXl)),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingXl),
+            ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingLg),
+              padding: const EdgeInsets.symmetric(
+                horizontal: UIConstants.spacingLg,
+              ),
               sliver: const HomeFeedList(),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 100)), // Bottom padding for nav bar
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 100),
+            ), // Bottom padding for nav bar
           ],
         ),
       ),

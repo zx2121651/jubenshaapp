@@ -13,13 +13,13 @@ class HomeFeatureIcons extends StatelessWidget {
       'badge': null,
     },
     {
-      'icon': Icons.celebration,
+      'icon': Icons.auto_awesome,
       'label': '活动',
       'color': Colors.purpleAccent,
       'badge': null,
     },
     {
-      'icon': Icons.storefront,
+      'icon': Icons.store,
       'label': '收藏馆',
       'color': Colors.lightBlue,
       'badge': 'NEW',
@@ -31,7 +31,7 @@ class HomeFeatureIcons extends StatelessWidget {
       'badge': null,
     },
     {
-      'icon': Icons.assignment_turned_in,
+      'icon': Icons.assignment,
       'label': '任务',
       'color': Colors.pinkAccent,
       'badge': 'DOT',
@@ -55,31 +55,17 @@ class HomeFeatureIcons extends StatelessWidget {
       children: [
         Stack(
           clipBehavior: Clip.none,
+          alignment: Alignment.center,
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    (item['color'] as Color).withValues(alpha: 0.8),
-                    (item['color'] as Color).withValues(alpha: 0.4),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: Icon(
-                item['icon'] as IconData,
-                color: Colors.white,
-                size: 28,
-              ),
+            Icon(
+              item['icon'] as IconData,
+              color: item['color'] as Color,
+              size: 40,
             ),
             if (item['badge'] == 'NEW')
               Positioned(
-                top: -4,
-                right: -8,
+                top: -8,
+                right: -12,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 4,
@@ -87,7 +73,7 @@ class HomeFeatureIcons extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: AppTheme.primary,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: AppTheme.background, width: 1.5),
                   ),
                   child: const Text(
@@ -102,11 +88,11 @@ class HomeFeatureIcons extends StatelessWidget {
               ),
             if (item['badge'] == 'DOT')
               Positioned(
-                top: 0,
-                right: 0,
+                top: -2,
+                right: 2,
                 child: Container(
-                  width: 10,
-                  height: 10,
+                  width: 8,
+                  height: 8,
                   decoration: BoxDecoration(
                     color: AppTheme.primary,
                     shape: BoxShape.circle,
@@ -116,13 +102,12 @@ class HomeFeatureIcons extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: UIConstants.spacingSm),
+        const SizedBox(height: 6),
         Text(
           item['label'] as String,
           style: const TextStyle(
             color: AppTheme.onSurfaceVariant,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontSize: 11,
           ),
         ),
       ],

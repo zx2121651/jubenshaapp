@@ -9,89 +9,77 @@ class HomeBanner extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: UIConstants.spacingLg),
       child: Container(
-        height: 80,
+        height: 64,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           gradient: const LinearGradient(
-            colors: [Color(0xFF2A1B38), Color(0xFF1A1525)],
+            colors: [Color(0xFF2D1E3A), Color(0xFF1E1528)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
           image: const DecorationImage(
             image: NetworkImage(
-              'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+              'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop',
             ), // Placeholder for banner background
             fit: BoxFit.cover,
-            opacity: 0.3,
+            opacity: 0.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Stack(
           children: [
-            // Mock banner content to match the screenshot "大侦探三期"
             const Positioned(
-              left: 20,
+              left: 16,
               top: 0,
               bottom: 0,
               child: Center(
                 child: Text(
                   '大侦探三期',
                   style: TextStyle(
-                    color: Color(0xFFFFCCFF), // Pinkish tint
-                    fontSize: 28,
+                    color: Color(0xFFFFE5FF),
+                    fontSize: 24,
                     fontWeight: FontWeight.w900,
                     fontStyle: FontStyle.italic,
+                    letterSpacing: 2,
                     shadows: [
-                      Shadow(color: Colors.purpleAccent, blurRadius: 10),
+                      Shadow(color: Colors.purpleAccent, blurRadius: 8),
                     ],
                   ),
                 ),
               ),
             ),
             Positioned(
-              right: 16,
+              right: 12,
               top: 0,
               bottom: 0,
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
+                  height: 44,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 4,
-                        offset: const Offset(2, 2),
-                      ),
-                    ],
+                    color: const Color(0xFFFFF0ED), // Light beige
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color(0xFFFFD5D5),
+                      width: 1,
+                    ),
                   ),
                   child: const Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '完成30天任务+签到',
                         style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 10,
+                          color: Color(0xFF8A6B8A),
+                          fontSize: 9,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         '免费获得永久装扮',
                         style: TextStyle(
-                          color: Colors.purple,
-                          fontSize: 12,
+                          color: Color(0xFF4A2B4A),
+                          fontSize: 11,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -102,9 +90,9 @@ class HomeBanner extends StatelessWidget {
             ),
             // Pin icon mock
             const Positioned(
-              right: 8,
-              top: 12,
-              child: Icon(Icons.push_pin, color: Colors.redAccent, size: 20),
+              right: 6,
+              top: 6,
+              child: Icon(Icons.push_pin, color: Colors.redAccent, size: 16),
             ),
           ],
         ),

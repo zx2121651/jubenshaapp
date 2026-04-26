@@ -14,11 +14,11 @@ class HomeProfileHeader extends StatelessWidget {
         children: [
           // Avatar
           Container(
-            width: 56,
-            height: 56,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white24, width: 2),
+              border: Border.all(color: Colors.white12, width: 1),
               image: const DecorationImage(
                 image: NetworkImage(
                   'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=150&auto=format&fit=crop&q=60',
@@ -38,23 +38,23 @@ class HomeProfileHeader extends StatelessWidget {
                   '大侦探2C9F2...',
                   style: TextStyle(
                     color: AppTheme.onSurface,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: UIConstants.spacingXs),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     _buildCurrencyBadge(
                       Icons.monetization_on,
                       Colors.amber,
-                      '150 +',
+                      '150',
                     ),
                     const SizedBox(width: UIConstants.spacingSm),
                     _buildCurrencyBadge(
                       Icons.diamond,
                       Colors.lightBlueAccent,
-                      '0 +',
+                      '0',
                     ),
                   ],
                 ),
@@ -64,29 +64,33 @@ class HomeProfileHeader extends StatelessWidget {
 
           // Right Action Button (首充特惠)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            height: 40,
+            width: 80,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFF9A9E), Color(0xFFFECFEF)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              image: const DecorationImage(
+                image: NetworkImage(
+                  'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=150&auto=format&fit=crop',
+                ), // Placeholder for fancy button
+                fit: BoxFit.cover,
+                opacity: 0.8,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.card_giftcard, size: 16, color: Colors.purple),
-                SizedBox(width: 4),
-                Text(
-                  '首充特惠',
-                  style: TextStyle(
-                    color: Colors.purple,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+            alignment: Alignment.center,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                '首充特惠',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -96,21 +100,22 @@ class HomeProfileHeader extends StatelessWidget {
 
   Widget _buildCurrencyBadge(IconData icon, Color iconColor, String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      height: 20,
+      padding: const EdgeInsets.only(left: 4, right: 8),
       decoration: BoxDecoration(
         color: AppTheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: iconColor),
+          Icon(icon, size: 12, color: iconColor),
           const SizedBox(width: 4),
           Text(
-            text,
+            '$text +',
             style: const TextStyle(
               color: AppTheme.onSurface,
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w500,
             ),
           ),

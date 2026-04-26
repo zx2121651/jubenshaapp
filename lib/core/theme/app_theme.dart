@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Dark Theme Palette matching the screenshot
-  static const Color background = Color(0xFF1B1D29);
-  static const Color surface = Color(0xFF222433);
-  static const Color surfaceContainerLow = Color(0xFF2A2D3E);
-  static const Color surfaceContainerLowest = Color(0xFF1B1D29);
+  static const Color background = Color(0xFF161824); // Very dark blue/grey
+  static const Color surface = Color(0xFF1F212D);
+  static const Color surfaceContainerLow = Color(0xFF262836);
+  static const Color surfaceContainerLowest = Color(0xFF161824);
 
-  static const Color primary = Color(0xFFFF4D6D);
+  static const Color primary = Color(0xFFFF3366);
   static const Color primaryContainer = Color(0xFFFF7577);
 
   static const Color onSurface = Color(0xFFFFFFFF);
@@ -15,19 +15,19 @@ class AppTheme {
 
   // Card gradients
   static const Gradient playScriptGradient = LinearGradient(
-    colors: [Color(0xFFCCFFFF), Color(0xFFE6F3FF)],
+    colors: [Color(0xFFE0FFFF), Color(0xFFB3E5FC)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const Gradient liveActionGradient = LinearGradient(
-    colors: [Color(0xFFFFD1FF), Color(0xFFFFE6FF)],
+    colors: [Color(0xFFFFE4FA), Color(0xFFFFC4F0)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const Gradient tenMinScriptGradient = LinearGradient(
-    colors: [Color(0xFFFFFFCC), Color(0xFFE6FFCC)],
+    colors: [Color(0xFFFFFFD9), Color(0xFFE8F5C8)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -42,7 +42,6 @@ class AppTheme {
       surface: surface,
       onSurface: onSurface,
       onSurfaceVariant: onSurfaceVariant,
-
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: background,
