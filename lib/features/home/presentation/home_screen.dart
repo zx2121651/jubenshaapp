@@ -40,6 +40,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Entrance(child: HomeProfileHeader()),
             ),
             const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  UIConstants.spacingLg,
+                  4,
+                  UIConstants.spacingLg,
+                  0,
+                ),
+                child: _HomeSearchEntry(),
+              ),
+            ),
+            const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingLg),
             ),
             const SliverToBoxAdapter(child: HomeFeatureIcons()),
@@ -90,5 +101,52 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _refresh() async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
+  }
+}
+
+/// 首页顶部搜索入口：主流内容 App 的标志性布局，整宽胶囊 + 搜索图标。
+class _HomeSearchEntry extends StatelessWidget {
+  const _HomeSearchEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    return PressScale(
+      pressedScale: 0.97,
+      onTap: () {},
+      child: Container(
+        height: 38,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.search, color: AppTheme.onSurfaceVariant, size: 18),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '搜索剧本 / 作者 / 标签',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppTheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+            Text(
+              '搜索',
+              style: TextStyle(
+                color: AppTheme.primary,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
