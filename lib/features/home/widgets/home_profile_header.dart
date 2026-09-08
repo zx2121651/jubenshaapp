@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/animations.dart';
+import '../../../shared/widgets/gradient_avatar.dart';
 
 class HomeProfileHeader extends StatelessWidget {
   const HomeProfileHeader({super.key});
@@ -12,34 +14,29 @@ class HomeProfileHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white12, width: 1),
-              image: const DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=150&auto=format&fit=crop&q=60',
-                ), // Silhouette placeholder
-                fit: BoxFit.cover,
+          // 头像
+          const Breathe(
+            child: GradientAvatar(
+              text: '大',
+              size: 48,
+              gradient: LinearGradient(
+                colors: [Color(0xFF16A085), Color(0xFF45B8AC)],
               ),
             ),
           ),
           const SizedBox(width: UIConstants.spacingMd),
 
-          // Info
+          // 信息
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  '大侦探2C9F2...',
+                  '大侦探2C9F2',
                   style: TextStyle(
                     color: AppTheme.onSurface,
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -62,33 +59,35 @@ class HomeProfileHeader extends StatelessWidget {
             ),
           ),
 
-          // Right Action Button (首充特惠)
-          Container(
-            height: 40,
-            width: 80,
-            decoration: BoxDecoration(
-              image: const DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=150&auto=format&fit=crop',
-                ), // Placeholder for fancy button
-                fit: BoxFit.cover,
-                opacity: 0.8,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            alignment: Alignment.center,
+          // 首充特惠按钮（本地渐变，无需外链图）
+          PressScale(
+            onTap: () {},
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
-                color: Colors.black45,
-                borderRadius: BorderRadius.circular(4),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFB388FF), Color(0xFFFF5F8F)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFF5F8F).withValues(alpha: 0.35),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
+              alignment: Alignment.center,
               child: const Text(
                 '首充特惠',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  shadows: [Shadow(color: Colors.black26, blurRadius: 2)],
                 ),
               ),
             ),

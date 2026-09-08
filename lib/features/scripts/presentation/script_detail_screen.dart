@@ -1,14 +1,388 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/constants/ui_constants.dart';
+import '../../core/theme/app_theme.dart';
+import '../../shared/widgets/gradient_avatar.dart';
+import '../home/data/mock_data_provider.dart';
+import '../home/domain/script_model.dart';
 
-class ScriptDetailScreen extends StatelessWidget {
-  final String scriptId;
+class ScriptDetailScreen extends ConsumerWidget {
   const ScriptDetailScreen({super.key, required this.scriptId});
+
+  final String scriptId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scripts = ref.watch(scriptListProvider);
+    final script =
+        scripts.firstWhere((s) => s.id == scriptId, orElse: () => scripts.first);
+    final others =
+        scripts.where((s) => s.id != script.id).take(4).toList();
+
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            // 封面头部
+            SliverToBoxAdapter(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 320,
+                    child: Hero(
+                      tag: 'script-cover-${script.id}',
+                      child: GradientCover(
+                        title: script.title,
+                        imageUrl: script.coverUrl,
+                        radius: 0,
+                        icon: Icons.theater_comedy,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 8,
+                    child: _RoundIconButton(
+                      icon: Icons.arrow_back,
+                      onTap: () => context.pop(),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    right: 8,
+                    child: _RoundIconButton(icon: Icons.share_outlined),
+                  ),
+                  // 底部渐隐
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: 80,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            AppTheme.background.withValues(alpha: 0),
+                            AppTheme.background,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: UIConstants.spacingLg,
+                ),
+                child: Entrance(
+                  offset: const Offset(0, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              script.title,
+                              style: const TextStyle(
+                                color: AppTheme.onSurface,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                          _Price(script: script),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: (script.tags).map((t) {
+                          return Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.surfaceContainerLow,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.white12),
+                            ),
+                            child: Text(
+                              t,
+                              style: const TextStyle(
+                                color: AppTheme.onSurfaceVariant,
+                                fontSize: 11,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          GradientAvatar(text: script.authorName, size: 22),
+                          const SizedBox(width: 8),
+                          Text(
+                            script.authorName,
+                            style: const TextStyle(
+                              color: AppTheme.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const Spacer(),
+                          const Icon(
+                            Icons.favorite,
+                            color: AppTheme.primary,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${script.likes}',
+                            style: const TextStyle(
+                              color: AppTheme.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            // 简介
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: UIConstants.spacingLg,
+                ),
+                child: Entrance(
+                  delay: const Duration(milliseconds: 80),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '剧本简介',
+                          style: TextStyle(
+                            color: AppTheme.onSurface,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '一封神秘邀请函，将一群素不相识的人聚集于此。迷雾笼罩的庄园里，真相被层层包裹。 '
+                          '你是见证者，也是局中人。拨开浮云，找出隐藏在你我之间的秘密。（示例简介文案）',
+                          style: TextStyle(
+                            color: AppTheme.onSurfaceVariant,
+                            fontSize: 12,
+                            height: 1.6,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            // 相关剧本
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: UIConstants.spacingLg),
+                child: Text(
+                  '更多精彩剧本',
+                  style: TextStyle(
+                    color: AppTheme.onSurface,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: UIConstants.spacingLg,
+              ),
+              sliver: SliverList.builder(
+                itemCount: others.length,
+                itemBuilder: (context, index) => Entrance(
+                  delay: Duration(milliseconds: 120 + index * 55),
+                  child: _RelatedScriptTile(script: others[index]),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
+          ],
+        ),
+      ),
+      // 底部发车栏
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+        decoration: BoxDecoration(
+          color: AppTheme.surface,
+          border: Border(
+            top: BorderSide(color: Colors.white10, width: 1),
+          ),
+        ),
+        child: SafeArea(
+          top: false,
+          child: GestureDetector(
+            onTap: () => context.push('/room/123'),
+            child: Container(
+              height: 48,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFB388FF), Color(0xFFFF5F8F)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFF5F8F).withValues(alpha: 0.35),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                '立即发车',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Price extends StatelessWidget {
+  const _Price({required this.script});
+
+  final ScriptModel script;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('剧本详情 - $scriptId')),
-      body: Center(child: Text('剧本详情页，ID: $scriptId\n展示售价、作者、评价、发车入口')),
+    return Row(
+      children: [
+        Text(
+          '${30 + script.id.hashCode.abs() % 50}',
+          style: const TextStyle(
+            color: Color(0xFFFF8A5C),
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Text(
+          ' 金币/人',
+          style: TextStyle(fontSize: 11, color: Colors.white54),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoundIconButton extends StatelessWidget {
+  const _RoundIconButton({required this.icon, this.onTap});
+
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.45),
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white24),
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
+    );
+  }
+}
+
+class _RelatedScriptTile extends StatelessWidget {
+  const _RelatedScriptTile({required this.script});
+
+  final ScriptModel script;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/scripts/${script.id}'),
+      child: Container(
+        height: 64,
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 46,
+              child: GradientCover(title: script.title, imageUrl: script.coverUrl, radius: 8),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    script.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppTheme.onSurface,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    script.tags.join(' / '),
+                    style: const TextStyle(
+                      color: AppTheme.onSurfaceVariant,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

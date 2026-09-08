@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/constants/app_motion.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/animations.dart';
 import '../widgets/home_profile_header.dart';
 import '../widgets/home_feature_icons.dart';
 import '../widgets/home_banner.dart';
@@ -26,7 +28,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingSm),
             ),
-            const SliverToBoxAdapter(child: HomeProfileHeader()),
+            const SliverToBoxAdapter(
+              child: Entrance(child: HomeProfileHeader()),
+            ),
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingLg),
             ),
@@ -34,11 +38,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingLg),
             ),
-            const SliverToBoxAdapter(child: HomeBanner()),
             const SliverToBoxAdapter(
-              child: SizedBox(height: UIConstants.spacingLg),
+              child: Entrance(
+                delay: Duration(milliseconds: 120),
+                offset: Offset(0, 16),
+                child: HomeBanner(),
+              ),
             ),
-            const SliverToBoxAdapter(child: HomePlaySection()),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingXl),
+            ),
+            const SliverToBoxAdapter(
+              child: Entrance(
+                delay: Duration(milliseconds: 140),
+                offset: Offset(0, 16),
+                child: HomePlaySection(),
+              ),
+            ),
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingXl),
             ),
@@ -46,7 +62,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: UIConstants.spacingLg,
               ),
-              sliver: const HomeFeedList(),
+              sliver: const SliverToBoxAdapter(
+                child: Entrance(
+                  delay: Duration(milliseconds: 160),
+                  offset: Offset(0, 16),
+                  child: HomeFeedList(),
+                ),
+              ),
             ),
             const SliverToBoxAdapter(
               child: SizedBox(height: 100),

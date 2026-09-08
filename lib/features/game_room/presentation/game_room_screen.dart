@@ -34,15 +34,31 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Background map (Placeholder)
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1200&auto=format&fit=crop',
-                ), // Placeholder map
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black38, BlendMode.darken),
+          // Background map (Placeholder) — 淡入渐显
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) =>
+                Opacity(opacity: value, child: child),
+            child: Container(
+              decoration: const BoxDecoration(
+                // 深色渐变底纹兜底：外链地图加载失败/离线时仍保留暗场氛围
+                gradient: LinearGradient(
+                  colors: [Color(0xFF2B2340), Color(0xFF0E1017)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1200&auto=format&fit=crop',
+                  ), // Placeholder map
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black38,
+                    BlendMode.darken,
+                  ),
+                ),
               ),
             ),
           ),

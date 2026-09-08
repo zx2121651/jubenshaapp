@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../shared/widgets/animations.dart';
 
 class GameBottomBar extends StatelessWidget {
   const GameBottomBar({super.key});
@@ -34,20 +35,23 @@ class GameBottomBar extends StatelessWidget {
   }
 
   Widget _buildActionItem(IconData icon, String label, Color color) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: color == Colors.white ? Colors.white70 : color,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+    return PressScale(
+      onTap: () {},
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: color == Colors.white ? Colors.white70 : color,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

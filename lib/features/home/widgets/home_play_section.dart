@@ -48,7 +48,8 @@ class HomePlaySection extends StatelessWidget {
                       Expanded(
                         child: _buildSmallCard(
                           title: '真人带本',
-                          badge: '首同特惠',
+                          subtitle: '沉浸式 NPC 带队',
+                          badge: '首充特惠',
                           gradient: AppTheme.liveActionGradient,
                           textColor: Colors.black,
                           badgeColor: Colors.pinkAccent,

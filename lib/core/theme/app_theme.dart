@@ -68,5 +68,51 @@ class AppTheme {
       type: BottomNavigationBarType.fixed,
       elevation: 0,
     ),
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: _AppPageTransitionsBuilder(),
+        TargetPlatform.iOS: _AppPageTransitionsBuilder(),
+        TargetPlatform.macOS: _AppPageTransitionsBuilder(),
+        TargetPlatform.windows: _AppPageTransitionsBuilder(),
+        TargetPlatform.linux: _AppPageTransitionsBuilder(),
+      },
+    ),
   );
+}
+
+/// 统一页面转场：淡入 + 轻微上移缩放，接近主流 APP 的轻量转场。
+class _AppPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _AppPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    // 次级页面：轻微缩放淡出，形成叠层感
+    if (route.isFirst) return child;
+
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+
+    return FadeTransition(
+      opacity: curved,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.06),
+          end: Offset.zero,
+        ).animate(curved),
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.98, end: 1.0).animate(curved),
+          child: child,
+        ),
+      ),
+    );
+  }
 }

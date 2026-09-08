@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/app_motion.dart';
 import '../../core/theme/app_theme.dart';
 
 class ScaffoldWithBottomNavBar extends StatelessWidget {
@@ -16,167 +17,283 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final index = navigationShell.currentIndex;
     return Scaffold(
-      body: Stack(
-        children: [
-          navigationShell,
-          // Floating Tooltip
-          if (navigationShell.currentIndex == 0) // Show on Home tab
-            Positioned(
-              bottom: 90, // Adjust position to point to the second tab
-              left: MediaQuery.of(context).size.width * 0.2 + 20,
-              child: _buildTooltip(),
+      body: AnimatedSwitcher(
+        duration: AppMotion.base,
+        switchInCurve: AppMotion.easeOut,
+        switchOutCurve: AppMotion.easeInOut,
+        transitionBuilder: (child, anim) {
+          final t = CurvedAnimation(
+            parent: anim,
+            curve: AppMotion.easeOut,
+            reverseCurve: AppMotion.easeInOut,
+          );
+          return FadeTransition(
+            opacity: anim,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.03),
+                end: Offset.zero,
+              ).animate(t),
+              child: child,
             ),
+          );
+        },
+        child: KeyedSubtree(
+          key: ValueKey<int>(index),
+          child: Stack(
+            children: [
+              navigationShell,
+              if (index == 0)
+                Positioned(
+                  bottom: 100,
+                  left: MediaQuery.of(context).size.width * 0.2 + 20,
+                  child: const _FloatingTooltip(),
+                ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _AnimatedBottomBar(
+        currentIndex: index,
+        onDestinationSelected: _goBranch,
+      ),
+    );
+  }
+}
+
+class _NavItem {
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+  });
+}
+
+const List<_NavItem> _navItems = [
+  _NavItem(icon: Icons.theater_comedy_outlined, activeIcon: Icons.theater_comedy, label: '首页'),
+  _NavItem(icon: Icons.shield_outlined, activeIcon: Icons.shield, label: '剧本'),
+  _NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore, label: '互动'),
+  _NavItem(icon: Icons.chat_bubble_outline, activeIcon: Icons.chat_bubble, label: '消息'),
+  _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: '我的'),
+];
+
+class _AnimatedBottomBar extends StatelessWidget {
+  const _AnimatedBottomBar({
+    required this.currentIndex,
+    required this.onDestinationSelected,
+  });
+
+  final int currentIndex;
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 12,
+            offset: Offset(0, -3),
+          ),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: AppTheme.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10,
-              offset: Offset(0, -2),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 76,
+            child: Row(
+              children: List.generate(_navItems.length, (i) {
+                return Expanded(
+                  child: _BarTab(
+                    item: _navItems[i],
+                    selected: currentIndex == i,
+                    onTap: () => onDestinationSelected(i),
+                  ),
+                );
+              }),
             ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          child: NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
-            onDestinationSelected: _goBranch,
-            backgroundColor: AppTheme.surface,
-            indicatorColor: Colors.transparent, // Remove default indicator
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            height: 80,
-            destinations: [
-              _buildDestination(
-                0,
-                Icons.face,
-                Icons.face,
-                '首页',
-                navigationShell.currentIndex == 0,
-              ),
-              _buildDestination(
-                1,
-                Icons.shield,
-                Icons.shield_outlined,
-                '剧本',
-                navigationShell.currentIndex == 1,
-              ),
-              _buildDestination(
-                2,
-                Icons.explore,
-                Icons.explore_outlined,
-                '互动',
-                navigationShell.currentIndex == 2,
-              ),
-              _buildDestination(
-                3,
-                Icons.chat_bubble,
-                Icons.chat_bubble_outline,
-                '消息',
-                navigationShell.currentIndex == 3,
-              ),
-              _buildDestination(
-                4,
-                Icons.tag_faces,
-                Icons.tag_faces,
-                '我的',
-                navigationShell.currentIndex == 4,
-              ),
-            ],
           ),
         ),
       ),
     );
   }
+}
 
-  NavigationDestination _buildDestination(
-    int index,
-    IconData selectedIcon,
-    IconData icon,
-    String label,
-    bool isSelected,
-  ) {
-    return NavigationDestination(
-      icon: Stack(
-        clipBehavior: Clip.none,
+class _BarTab extends StatelessWidget {
+  const _BarTab({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final _NavItem item;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    // 红点：消息常驻；首页仅未选中时提示。
+    final bool showDot;
+    if (item.label == '消息') {
+      showDot = true;
+    } else {
+      showDot = item.label == '首页' && !selected;
+    }
+
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            isSelected ? selectedIcon : icon,
-            color: isSelected ? AppTheme.onSurface : AppTheme.onSurfaceVariant,
-            size: 28,
-          ),
-          if (index == 0 && !isSelected) // Red dot for Home when not selected
-            Positioned(
-              top: -2,
-              right: -2,
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: AppTheme.primary,
-                  shape: BoxShape.circle,
+          Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              // 激活指示器（pill）
+              AnimatedContainer(
+                duration: AppMotion.base,
+                curve: AppMotion.easeOut,
+                width: selected ? 52 : 0,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(20),
                 ),
               ),
-            ),
-          if (index == 3) // Red dot for messages
-            Positioned(
-              top: -2,
-              right: -2,
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: AppTheme.primary,
-                  shape: BoxShape.circle,
+              // 图标：选中时放大 + 颜色切换
+              AnimatedScale(
+                scale: selected ? 1.22 : 1.0,
+                duration: AppMotion.base,
+                curve: AppMotion.bounceOut,
+                child: AnimatedSwitcher(
+                  duration: AppMotion.fast,
+                  child: Icon(
+                    selected ? item.activeIcon : item.icon,
+                    key: ValueKey<bool>(selected),
+                    color: selected
+                        ? AppTheme.primary
+                        : AppTheme.onSurfaceVariant,
+                    size: 26,
+                  ),
                 ),
               ),
-            ),
-        ],
-      ),
-      label: label,
-    );
-  }
-
-  Widget _buildTooltip() {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
+              if (showDot)
+                const Positioned(
+                  top: -5,
+                  right: -6,
+                  child: _BadgeDot(size: 8),
+                ),
             ],
           ),
-          child: const Text(
-            '剧本上新了',
+          const SizedBox(height: 4),
+          AnimatedDefaultTextStyle(
+            duration: AppMotion.base,
+            curve: AppMotion.easeOut,
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              color: selected ? AppTheme.onSurface : AppTheme.onSurfaceVariant,
+              fontSize: 11,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            ),
+            child: Text(item.label),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BadgeDot extends StatelessWidget {
+  const _BadgeDot({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(
+        color: AppTheme.primary,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
+
+/// “剧本上新了”浮动提示，带淡入与呼吸感。
+class _FloatingTooltip extends StatelessWidget {
+  const _FloatingTooltip();
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: AppMotion.slow,
+      curve: AppMotion.bounceOut,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 12 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.28),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.auto_awesome, size: 14, color: AppTheme.primary),
+                SizedBox(width: 5),
+                Text(
+                  '剧本上新了',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        // Triangle pointing down
-        Positioned(
-          bottom: -6,
-          child: CustomPaint(
-            size: const Size(12, 6),
-            painter: _TrianglePainter(),
+          Positioned(
+            bottom: -6,
+            child: CustomPaint(
+              size: const Size(12, 6),
+              painter: _TrianglePainter(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -187,13 +304,11 @@ class _TrianglePainter extends CustomPainter {
     final paint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-
     final path = Path()
       ..moveTo(0, 0)
       ..lineTo(size.width, 0)
       ..lineTo(size.width / 2, size.height)
       ..close();
-
     canvas.drawPath(path, paint);
   }
 
