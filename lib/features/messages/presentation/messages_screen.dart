@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_motion.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/widgets/animations.dart';
 import '../../shared/widgets/gradient_avatar.dart';
 
 class MessagesScreen extends StatefulWidget {
@@ -94,9 +95,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 itemBuilder: (context, index) => Entrance(
                   delay: Duration(milliseconds: 50 + index * 50),
                   offset: const Offset(0, 12),
-                  child: _isNotices
-                      ? _NoticeTile(item: data[index])
-                      : _ConversationTile(item: data[index]),
+                  child: PressScale(
+                    pressedScale: 0.96,
+                    child: _isNotices
+                        ? _NoticeTile(item: data[index])
+                        : _ConversationTile(item: data[index]),
+                  ),
                 ),
               ),
             ),
