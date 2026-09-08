@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../shared/widgets/animations.dart';
+import '../../../shared/widgets/animations.dart';
 
 class GameChatOverlay extends StatelessWidget {
   const GameChatOverlay({super.key});

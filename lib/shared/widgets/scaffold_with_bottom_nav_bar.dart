@@ -78,7 +78,7 @@ class _NavItem {
 const List<_NavItem> _navItems = [
   _NavItem(icon: Icons.theater_comedy_outlined, activeIcon: Icons.theater_comedy, label: '首页'),
   _NavItem(icon: Icons.shield_outlined, activeIcon: Icons.shield, label: '剧本'),
-  _NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore, label: '互动'),
+  _NavItem(icon: Icons.theater_comedy_outlined, activeIcon: Icons.theater_comedy, label: '互动'),
   _NavItem(icon: Icons.chat_bubble_outline, activeIcon: Icons.chat_bubble, label: '消息'),
   _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: '我的'),
 ];
@@ -112,19 +112,123 @@ class _AnimatedBottomBar extends StatelessWidget {
           top: false,
           child: SizedBox(
             height: 76,
-            child: Row(
-              children: List.generate(_navItems.length, (i) {
-                return Expanded(
-                  child: _BarTab(
-                    item: _navItems[i],
-                    selected: currentIndex == i,
-                    onTap: () => onDestinationSelected(i),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                // 行区：左右两侧各 2 个常规 tab
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _BarTab(
+                          item: _navItems[0],
+                          selected: currentIndex == 0,
+                          onTap: () => onDestinationSelected(0),
+                        ),
+                      ),
+                      Expanded(
+                        child: _BarTab(
+                          item: _navItems[1],
+                          selected: currentIndex == 1,
+                          onTap: () => onDestinationSelected(1),
+                        ),
+                      ),
+                      // 中央占位，让两侧向左右扩散，给主按钮留出空间
+                      const Spacer(flex: 2),
+                      Expanded(
+                        child: _BarTab(
+                          item: _navItems[3],
+                          selected: currentIndex == 3,
+                          onTap: () => onDestinationSelected(3),
+                        ),
+                      ),
+                      Expanded(
+                        child: _BarTab(
+                          item: _navItems[4],
+                          selected: currentIndex == 4,
+                          onTap: () => onDestinationSelected(4),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }),
+                ),
+                // 中央主按钮：一键开组，纵向压住底栏
+                _CentralActionButton(
+                  selected: currentIndex == 2,
+                  onTap: () => onDestinationSelected(2),
+                ),
+              ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// 中央「开始游戏」主按钮：国内剧本杀 App 底栏的标志性凸起元素。
+class _CentralActionButton extends StatelessWidget {
+  const _CentralActionButton({required this.selected, required this.onTap});
+
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // 凸起圆形按钮，向上溢出底栏
+          Transform.translate(
+            offset: const Offset(0, -18),
+            child: AnimatedContainer(
+              duration: AppMotion.slow,
+              curve: AppMotion.bounceOut,
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: selected
+                      ? [AppTheme.primaryContainer, AppTheme.primary]
+                      : [const Color(0xFF9B7BFF), const Color(0xFF6C3FDC)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primary.withValues(alpha: selected ? 0.75 : 0.45),
+                    blurRadius: selected ? 22 : 14,
+                    offset: Offset(0, selected ? 8 : 5),
+                  ),
+                ],
+              ),
+              child: AnimatedScale(
+                scale: selected ? 1.08 : 1.0,
+                duration: AppMotion.base,
+                curve: AppMotion.bounceOut,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            '开始游戏',
+            style: TextStyle(
+              color: AppTheme.onSurfaceVariant,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

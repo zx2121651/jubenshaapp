@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_motion.dart';
-import '../../shared/widgets/animations.dart';
+import '../../../core/constants/app_motion.dart';
+import '../../../shared/widgets/animations.dart';
 
 class PlayerAvatarWidget extends StatelessWidget {
   final String name;
@@ -51,19 +51,11 @@ class PlayerAvatarWidget extends StatelessWidget {
                         ]
                       : null,
                   gradient: _gradientFor(name),
-                  image: isSpeaking
-                      ? null
-                      : DecorationImage(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
-                        ),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                foregroundImage: isSpeaking
-                    ? DecorationImage(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      )
-                    : null,
               ),
               // 说话指示图标
               if (isSpeaking)

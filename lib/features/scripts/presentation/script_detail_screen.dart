@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/constants/ui_constants.dart';
-import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/gradient_avatar.dart';
-import '../home/data/mock_data_provider.dart';
-import '../home/domain/script_model.dart';
+import '../../../core/constants/ui_constants.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/gradient_avatar.dart';
+import '../../../shared/widgets/animations.dart';
+import '../../home/data/mock_data_provider.dart';
+import '../../home/domain/script_model.dart';
 
 class ScriptDetailScreen extends ConsumerWidget {
   const ScriptDetailScreen({super.key, required this.scriptId});

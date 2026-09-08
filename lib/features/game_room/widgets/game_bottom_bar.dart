@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../shared/widgets/animations.dart';
+import '../../../shared/widgets/animations.dart';
 
 class GameBottomBar extends StatelessWidget {
   const GameBottomBar({super.key});

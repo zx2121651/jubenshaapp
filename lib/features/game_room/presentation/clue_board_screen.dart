@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/ui_constants.dart';
-import '../../shared/widgets/animations.dart';
+import '../../../core/constants/ui_constants.dart';
+import '../../../shared/widgets/animations.dart';
 
 class ClueBoardScreen extends StatefulWidget {
   final String roomId;

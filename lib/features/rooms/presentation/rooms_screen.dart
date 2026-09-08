@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/constants/app_motion.dart';
-import '../../core/constants/ui_constants.dart';
-import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/gradient_avatar.dart';
-import '../home/data/mock_data_provider.dart';
+import '../../../core/constants/app_motion.dart';
+import '../../../core/constants/ui_constants.dart';
+import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/gradient_avatar.dart';
+import '../../../shared/widgets/animations.dart';
+import '../../home/data/mock_data_provider.dart';
 
 class RoomsScreen extends ConsumerStatefulWidget {
   const RoomsScreen({super.key});
@@ -86,16 +87,25 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
                 UIConstants.spacingLg,
                 100,
               ),
-              sliver: SliverList.builder(
-                itemCount: scripts.length,
-                itemBuilder: (context, index) {
-                  final s = scripts[index];
-                  return Entrance(
-                    delay: Duration(milliseconds: 60 + index * 55),
-                    offset: const Offset(0, 14),
-                    child: _ScriptCard(script: s, index: index),
-                  );
-                },
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: UIConstants.spacingMd,
+                  mainAxisSpacing: UIConstants.spacingMd,
+                  // 大封面 + 底部信息，宽度:高度≈0.72（国内剧本商城的双列密度）
+                  childAspectRatio: 0.72,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final s = scripts[index];
+                    return Entrance(
+                      delay: Duration(milliseconds: 60 + index * 55),
+                      offset: const Offset(0, 14),
+                      child: _ScriptCard(script: s, index: index),
+                    );
+                  },
+                  childCount: scripts.length,
+                ),
               ),
             ),
             ],

@@ -9,6 +9,7 @@ import '../widgets/home_feature_icons.dart';
 import '../widgets/home_banner.dart';
 import '../widgets/home_play_section.dart';
 import '../widgets/home_feed_list.dart';
+import '../widgets/home_category_tabs.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -49,6 +50,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 child: _HomeSearchEntry(),
               ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingLg),
+            ),
+            const SliverToBoxAdapter(
+              child: Entrance(child: HomeCategoryTabs()),
             ),
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingLg),
