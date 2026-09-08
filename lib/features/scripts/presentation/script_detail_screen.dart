@@ -202,6 +202,34 @@ class ScriptDetailScreen extends ConsumerWidget {
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            // 角色简介（主流详情页标配：带插图的角色卡）
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: UIConstants.spacingLg,
+                ),
+                child: Entrance(
+                  delay: const Duration(milliseconds: 100),
+                  offset: const Offset(0, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '角色简介',
+                        style: TextStyle(
+                          color: AppTheme.onSurface,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const _RoleCard(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
             // 相关剧本
             const SliverToBoxAdapter(
               child: Padding(
@@ -233,7 +261,6 @@ class ScriptDetailScreen extends ConsumerWidget {
           ],
         ),
       ),
-      // 底部发车栏
       bottomNavigationBar: Container(
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
         decoration: BoxDecoration(
@@ -275,6 +302,79 @@ class ScriptDetailScreen extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// 角色简介卡：主流详情页标配，渐变头像 + 姓名/性格标签 + 一行简介。
+class _RoleCard extends StatelessWidget {
+  const _RoleCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          const GradientAvatar(text: '林', size: 44),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      '林晚秋',
+                      style: TextStyle(
+                        color: AppTheme.onSurface,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        '冷静沉着',
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  '出身名门的记者，看似柔弱却心思缜密，对庄园的每一封请柬都抱有几分疑虑。',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppTheme.onSurfaceVariant,
+                    fontSize: 11,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: Colors.white30, size: 18),
+        ],
       ),
     );
   }
