@@ -25,9 +25,16 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          color: AppTheme.primary,
+          backgroundColor: AppTheme.surfaceContainerLow,
+          strokeWidth: 2.4,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
@@ -91,10 +98,15 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
                 },
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    await Future<void>.delayed(const Duration(milliseconds: 700));
   }
 }
 
@@ -172,13 +184,16 @@ class _ScriptCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Row(
           children: [
-            // 封面
+            // 封面（Hero 共享元素，与详情页封面联动飞行）
             SizedBox(
               width: 72,
-              child: GradientCover(
-                title: s.title,
-                imageUrl: s.coverUrl,
-                radius: 0,
+              child: Hero(
+                tag: 'script-cover-${s.id}',
+                child: GradientCover(
+                  title: s.title,
+                  imageUrl: s.coverUrl,
+                  radius: 0,
+                ),
               ),
             ),
             const SizedBox(width: 12),

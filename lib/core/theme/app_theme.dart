@@ -61,6 +61,8 @@ class AppTheme {
       bodyMedium: TextStyle(color: onSurface),
       labelSmall: TextStyle(color: onSurfaceVariant),
     ),
+    // 全局滚动手感：统一为回弹（Bouncing），贴近主流剧本杀 App 的细腻滚动。
+    scrollBehavior: const _AppScrollBehavior(),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: surface,
       selectedItemColor: onSurface,
@@ -115,4 +117,13 @@ class _AppPageTransitionsBuilder extends PageTransitionsBuilder {
       ),
     );
   }
+}
+
+/// 全局滚动行为：所有平台统一使用 iOS 式回弹手感，并支持透明指示条（隐藏进度条）。
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 }

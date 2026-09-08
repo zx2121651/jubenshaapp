@@ -51,9 +51,16 @@ class _SquareScreenState extends State<SquareScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          color: AppTheme.primary,
+          backgroundColor: AppTheme.surfaceContainerLow,
+          strokeWidth: 2.4,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
@@ -114,9 +121,14 @@ class _SquareScreenState extends State<SquareScreen> {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    await Future<void>.delayed(const Duration(milliseconds: 700));
   }
 }
 
