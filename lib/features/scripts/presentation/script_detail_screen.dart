@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_motion.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/gradient_avatar.dart';
@@ -231,6 +232,20 @@ class ScriptDetailScreen extends ConsumerWidget {
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            // 口碑评分（主流详情页标配：维度得分 + 用户评价）
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: UIConstants.spacingLg,
+                ),
+                child: Entrance(
+                  delay: const Duration(milliseconds: 120),
+                  offset: const Offset(0, 16),
+                  child: _ReputationSection(script: script),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
             // 相关剧本
             const SliverToBoxAdapter(
               child: Padding(
@@ -304,6 +319,227 @@ class ScriptDetailScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 口碑评分区：多维度得分 + 用户评价，国内剧本 App 详情页的核心信任模块。
+class _ReputationSection extends StatelessWidget {
+  const _ReputationSection({required this.script});
+
+  final ScriptModel script;
+
+  // 基于剧本 id 生成稳定的维度分（8~9.8 区间），避免每次刷新跳动。
+  List<double> _dims() {
+    final seed = script.id.hashCode.abs() % 100;
+    return [
+      8.4 + (seed % 14) / 10,
+      8.0 + ((seed * 3) % 16) / 10,
+      8.6 + ((seed * 7) % 12) / 10,
+      8.2 + ((seed * 5) % 14) / 10,
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dims = _dims();
+    final avg = (dims.reduce((a, b) => a + b) / dims.length).toStringAsFixed(1);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '口碑评价',
+            style: TextStyle(
+              color: AppTheme.onSurface,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              // 综合评分大数字
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppTheme.primary, AppTheme.primaryContainer],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        avg,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const Text(
+                        '综合评分',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 9,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  children: [
+                    _dimRow('沉浸氛围', dims[0]),
+                    const SizedBox(height: 8),
+                    _dimRow('烧脑指数', dims[1]),
+                    const SizedBox(height: 8),
+                    _dimRow('情感代入', dims[2]),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          const Divider(color: Colors.white10, height: 1),
+          const SizedBox(height: 14),
+          const _ReviewTile(
+            user: '雾里看花',
+            text: '剧情反转绝绝子，DM 带得很投入，环境氛围拉满，硬核玩家闭眼入。',
+            tag: '硬核爱好者',
+          ),
+          const SizedBox(height: 10),
+          const _ReviewTile(
+            user: '夜半话鬼',
+            text: '情感线很戳人，玩到最后眼眶都红了，适合熟人车。',
+            tag: '情感玩家',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dimRow(String label, double score) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 48,
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: AppTheme.onSurfaceVariant,
+              fontSize: 10,
+            ),
+          ),
+        ),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: (score - 8) / 2,
+              minHeight: 5,
+              backgroundColor: Colors.white10,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primary),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 26,
+          child: Text(
+            score.toStringAsFixed(1),
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: Color(0xFFD4AF6A),
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewTile extends StatelessWidget {
+  const _ReviewTile({
+    required this.user,
+    required this.text,
+    required this.tag,
+  });
+
+  final String user;
+  final String text;
+  final String tag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GradientAvatar(text: user, size: 30),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    user,
+                    style: const TextStyle(
+                      color: AppTheme.onSurface,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      tag,
+                      style: const TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 9,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 3),
+              Text(
+                text,
+                style: const TextStyle(
+                  color: AppTheme.onSurfaceVariant,
+                  fontSize: 11,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
