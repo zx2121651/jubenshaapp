@@ -3,12 +3,28 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_motion.dart';
 import '../../core/theme/app_theme.dart';
 
-class ScaffoldWithBottomNavBar extends StatelessWidget {
+class ScaffoldWithBottomNavBar extends StatefulWidget {
   const ScaffoldWithBottomNavBar({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
+  @override
+  State<ScaffoldWithBottomNavBar> createState() =>
+      _ScaffoldWithBottomNavBarState();
+}
+
+class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
+  // 记录本次切换方向：+1 向右切（新页从右滑入），-1 向左切，0 无方向。
+  int _direction = 0;
+
+  StatefulNavigationShell get navigationShell => widget.navigationShell;
+
   void _goBranch(int index) {
+    final cur = navigationShell.currentIndex;
+    setState(() {
+      // 中央主按钮与两侧 tab 的方向判定：目的地大于当前则向右推进。
+      _direction = index > cur ? 1 : (index < cur ? -1 : 0);
+    });
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
@@ -22,20 +38,21 @@ class ScaffoldWithBottomNavBar extends StatelessWidget {
       body: AnimatedSwitcher(
         duration: AppMotion.base,
         switchInCurve: AppMotion.easeOut,
-        switchOutCurve: AppMotion.easeInOut,
+        switchOutCurve: AppMotion.easeOut,
         transitionBuilder: (child, anim) {
-          final t = CurvedAnimation(
+          // 方向感知的水平翻页：向右切换时旧页向左让位、新页自右滑入。
+          final enterT = CurvedAnimation(
             parent: anim,
             curve: AppMotion.easeOut,
-            reverseCurve: AppMotion.easeInOut,
           );
+          final dx = _direction * 0.12;
           return FadeTransition(
             opacity: anim,
             child: SlideTransition(
               position: Tween<Offset>(
-                begin: const Offset(0.0, 0.03),
+                begin: Offset(dx, 0),
                 end: Offset.zero,
-              ).animate(t),
+              ).animate(enterT),
               child: child,
             ),
           );
@@ -212,9 +229,9 @@ class _CentralActionButton extends StatelessWidget {
                 duration: AppMotion.base,
                 curve: AppMotion.bounceOut,
                 child: const Icon(
-                  Icons.add,
+                  Icons.sports_esports,
                   color: Colors.white,
-                  size: 30,
+                  size: 28,
                 ),
               ),
             ),
