@@ -116,7 +116,7 @@ class _HomeBannerState extends State<HomeBanner> {
                 height: 6,
                 decoration: BoxDecoration(
                   color: _current == i
-                      ? const Color(0xFFB388FF)
+                      ? const Color(0xFFB488FF)
                       : Colors.white24,
                   borderRadius: BorderRadius.circular(3),
                 ),
@@ -164,7 +164,7 @@ class _BannerCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    slide.accent.withValues(alpha: 0.28),
+                    slide.accent.withValues(alpha: 0.16),
                     slide.accent.withValues(alpha: 0.0),
                   ],
                 ),
@@ -186,9 +186,8 @@ class _BannerCard extends StatelessWidget {
                         style: TextStyle(
                           color: slide.accent,
                           fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          fontStyle: FontStyle.italic,
-                          letterSpacing: 1.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1,
                           shadows: [
                             Shadow(color: Colors.black38, blurRadius: 8),
                           ],

@@ -44,13 +44,13 @@ class HomeProfileHeader extends StatelessWidget {
                   children: [
                     _buildCurrencyBadge(
                       Icons.monetization_on,
-                      Colors.amber,
+                      const Color(0xFFD4AF6A),
                       '150',
                     ),
                     const SizedBox(width: UIConstants.spacingSm),
                     _buildCurrencyBadge(
                       Icons.diamond,
-                      Colors.lightBlueAccent,
+                      const Color(0xFF4FC3B7),
                       '0',
                     ),
                   ],
@@ -67,14 +67,14 @@ class HomeProfileHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFB388FF), Color(0xFFFF5F8F)],
+                  colors: [Color(0xFF8A5CF6), Color(0xFFB488FF)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFFF5F8F).withValues(alpha: 0.35),
+                    color: const Color(0xFF8A5CF6).withValues(alpha: 0.35),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

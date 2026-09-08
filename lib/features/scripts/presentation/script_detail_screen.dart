@@ -277,14 +277,14 @@ class ScriptDetailScreen extends ConsumerWidget {
               height: 48,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFB388FF), Color(0xFFFF5F8F)],
+                  colors: [Color(0xFF8A5CF6), Color(0xFFB488FF)],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFFF5F8F).withValues(alpha: 0.35),
+                    color: const Color(0xFF8A5CF6).withValues(alpha: 0.35),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -392,7 +392,7 @@ class _Price extends StatelessWidget {
         Text(
           '${30 + script.id.hashCode.abs() % 50}',
           style: const TextStyle(
-            color: Color(0xFFFF8A5C),
+            color: Color(0xFFD4AF6A),
             fontSize: 16,
             fontWeight: FontWeight.w800,
           ),

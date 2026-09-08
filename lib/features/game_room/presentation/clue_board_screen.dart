@@ -133,7 +133,7 @@ class _SuspectCard extends StatelessWidget {
             width: 34,
             height: 34,
             decoration: const BoxDecoration(
-              color: Color(0xFFB388FF),
+              color: Color(0xFFA78BFA),
               shape: BoxShape.circle,
             ),
             child: Center(

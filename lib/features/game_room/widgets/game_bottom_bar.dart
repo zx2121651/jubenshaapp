@@ -25,7 +25,7 @@ class GameBottomBar extends StatelessWidget {
             _buildActionItem(Icons.mic_none, '语音', Colors.amber),
             _buildActionItem(Icons.description_outlined, '剧本', Colors.white),
             _buildActionItem(Icons.hub_outlined, '线索', Colors.white),
-            _buildActionItem(Icons.card_giftcard, '礼物', Colors.pinkAccent),
+            _buildActionItem(Icons.card_giftcard, '礼物', const Color(0xFFE0647C)),
             _buildActionItem(Icons.lightbulb_outline, '技能', Colors.white),
             _buildActionItem(Icons.edit_note_outlined, '笔记', Colors.white),
           ],

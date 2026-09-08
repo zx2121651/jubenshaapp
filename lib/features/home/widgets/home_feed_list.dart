@@ -63,7 +63,7 @@ class HomeFeedList extends StatelessWidget {
                             padding: EdgeInsets.only(right: 4),
                             child: Icon(
                               Icons.favorite,
-                              color: Colors.pinkAccent,
+                              color: Color(0xFFE0647C),
                               size: 14,
                             ),
                           ),

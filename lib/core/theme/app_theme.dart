@@ -7,27 +7,28 @@ class AppTheme {
   static const Color surfaceContainerLow = Color(0xFF262836);
   static const Color surfaceContainerLowest = Color(0xFF161824);
 
-  static const Color primary = Color(0xFFFF3366);
-  static const Color primaryContainer = Color(0xFFFF7577);
+  // 沉浸暗色体系：暗紫主色 + 暗金加分，替代高饱和玫红，贴近国内剧本杀调性
+  static const Color primary = Color(0xFF8A5CF6); // 暗紫
+  static const Color primaryContainer = Color(0xFFA78BFA); // 柔和紫
 
   static const Color onSurface = Color(0xFFFFFFFF);
   static const Color onSurfaceVariant = Color(0xFFA0A0AA);
 
-  // Card gradients
+  // 运营卡渐变：改为暗色霓虹氛围（原马卡龙亮色过偏美式），配白字/描边
   static const Gradient playScriptGradient = LinearGradient(
-    colors: [Color(0xFFE0FFFF), Color(0xFFB3E5FC)],
+    colors: [Color(0xFF3D3FA0), Color(0xFF242A5A)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const Gradient liveActionGradient = LinearGradient(
-    colors: [Color(0xFFFFE4FA), Color(0xFFFFC4F0)],
+    colors: [Color(0xFF5A2E52), Color(0xFF2A1830)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const Gradient tenMinScriptGradient = LinearGradient(
-    colors: [Color(0xFFFFFFD9), Color(0xFFE8F5C8)],
+    colors: [Color(0xFF14414A), Color(0xFF0E2932)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

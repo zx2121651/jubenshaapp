@@ -8,11 +8,11 @@ class HomeFeatureIcons extends StatelessWidget {
   const HomeFeatureIcons({super.key});
 
   static const List<Map<String, dynamic>> items = [
-    {'icon': Icons.emoji_events, 'label': '排行榜', 'color': Colors.amber, 'badge': null},
-    {'icon': Icons.auto_awesome, 'label': '活动', 'color': Colors.purpleAccent, 'badge': null},
-    {'icon': Icons.storefront, 'label': '收藏馆', 'color': Colors.lightBlue, 'badge': 'NEW'},
-    {'icon': Icons.groups, 'label': '俱乐部', 'color': Colors.yellow, 'badge': null},
-    {'icon': Icons.assignment, 'label': '任务', 'color': Colors.pinkAccent, 'badge': 'DOT'},
+    {'icon': Icons.emoji_events, 'label': '排行榜', 'color': Color(0xFFD4AF6A), 'badge': null},
+    {'icon': Icons.auto_awesome, 'label': '活动', 'color': Color(0xFF8A5CF6), 'badge': null},
+    {'icon': Icons.storefront, 'label': '收藏馆', 'color': Color(0xFF4FC3B7), 'badge': 'NEW'},
+    {'icon': Icons.groups, 'label': '俱乐部', 'color': Color(0xFFC9A15E), 'badge': null},
+    {'icon': Icons.assignment, 'label': '任务', 'color': Color(0xFFE0647C), 'badge': 'DOT'},
   ];
 
   @override

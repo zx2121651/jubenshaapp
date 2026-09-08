@@ -219,14 +219,14 @@ class _ScriptCard extends StatelessWidget {
                       ),
                       const Icon(
                         Icons.star_rounded,
-                        color: Color(0xFFFFC24B),
+                        color: Color(0xFFD4AF6A),
                         size: 16,
                       ),
                       const SizedBox(width: 3),
                       Text(
                         _score(s),
                         style: const TextStyle(
-                          color: Color(0xFFFFC24B),
+                          color: Color(0xFFD4AF6A),
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),

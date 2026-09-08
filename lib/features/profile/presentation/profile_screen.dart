@@ -9,14 +9,14 @@ class ProfileScreen extends StatelessWidget {
 
   static const _menuGroups = [
     [
-      {'icon': Icons.storefront, 'label': '商店', 'color': Color(0xFFFF8A5C)},
-      {'icon': Icons.account_balance_wallet, 'label': '钱包', 'color': Color(0xFFFFC24B)},
-      {'icon': Icons.collections_bookmark, 'label': '收藏馆', 'color': Color(0xFF4CC3FF)},
+      {'icon': Icons.storefront, 'label': '商店', 'color': Color(0xFFE0647C)},
+      {'icon': Icons.account_balance_wallet, 'label': '钱包', 'color': Color(0xFFD4AF6A)},
+      {'icon': Icons.collections_bookmark, 'label': '收藏馆', 'color': Color(0xFF4FC3B7)},
     ],
     [
-      {'icon': Icons.videogame_asset, 'label': 'DM控制台', 'color': Color(0xFFB388FF)},
+      {'icon': Icons.videogame_asset, 'label': 'DM控制台', 'color': Color(0xFF8A5CF6)},
       {'icon': Icons.star, 'label': '徽章', 'color': Color(0xFF4AC29A)},
-      {'icon': Icons.flag, 'label': '我的俱乐部', 'color': Color(0xFFFF5F8F)},
+      {'icon': Icons.flag, 'label': '我的俱乐部', 'color': Color(0xFFE0647C)},
     ],
     [
       {'icon': Icons.settings, 'label': '设置', 'color': Color(0xFF9AA5B1)},
@@ -83,9 +83,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    _asset(Icons.monetization_on, Colors.amber, '150'),
-                    _asset(Icons.diamond, Colors.lightBlueAccent, '0'),
-                    _asset(Icons.local_fire_department, Colors.pinkAccent, '连续7天'),
+                    _asset(Icons.monetization_on, const Color(0xFFD4AF6A), '150'),
+                    _asset(Icons.diamond, const Color(0xFF4FC3B7), '0'),
+                    _asset(Icons.local_fire_department, const Color(0xFFE0647C), '连续7天'),
                   ],
                 ),
               ),

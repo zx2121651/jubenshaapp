@@ -29,7 +29,7 @@ class GameChatOverlay extends StatelessWidget {
                 SizedBox(width: 4),
                 Text(
                   '草莓甜心派 ',
-                  style: TextStyle(color: Colors.pinkAccent, fontSize: 12),
+                  style: TextStyle(color: Color(0xFFE0647C), fontSize: 12),
                 ),
                 Text(
                   '公开了线索',
@@ -53,11 +53,11 @@ class GameChatOverlay extends StatelessWidget {
             offset: Offset(0, 10),
             child: Row(
               children: [
-                Icon(Icons.face, color: Colors.pinkAccent, size: 14),
+                Icon(Icons.face, color: Color(0xFFE0647C), size: 14),
                 SizedBox(width: 4),
                 Text(
                   '草莓甜心派: ',
-                  style: TextStyle(color: Colors.pinkAccent, fontSize: 12),
+                  style: TextStyle(color: Color(0xFFE0647C), fontSize: 12),
                 ),
                 Expanded(
                   child: Text(
