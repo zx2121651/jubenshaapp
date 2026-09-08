@@ -351,7 +351,14 @@ class _RelatedScriptTile extends StatelessWidget {
           children: [
             SizedBox(
               width: 46,
-              child: GradientCover(title: script.title, imageUrl: script.coverUrl, radius: 8),
+              child: Hero(
+                tag: 'script-cover-${script.id}',
+                child: GradientCover(
+                  title: script.title,
+                  imageUrl: script.coverUrl,
+                  radius: 8,
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
