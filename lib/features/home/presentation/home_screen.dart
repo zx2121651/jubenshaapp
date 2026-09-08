@@ -10,6 +10,7 @@ import '../widgets/home_banner.dart';
 import '../widgets/home_play_section.dart';
 import '../widgets/home_feed_list.dart';
 import '../widgets/home_category_tabs.dart';
+import '../widgets/home_team_section.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -59,6 +60,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SliverToBoxAdapter(
               child: SizedBox(height: UIConstants.spacingLg),
+            ),
+            const SliverToBoxAdapter(
+              child: Entrance(
+                delay: Duration(milliseconds: 80),
+                offset: Offset(0, 16),
+                child: HomeTeamSection(),
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: UIConstants.spacingXl),
             ),
             const SliverToBoxAdapter(child: HomeFeatureIcons()),
             const SliverToBoxAdapter(
