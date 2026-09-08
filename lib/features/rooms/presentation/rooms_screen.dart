@@ -70,7 +70,7 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
                   ),
                   scrollDirection: Axis.horizontal,
                   itemCount: _chips.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (context, i) => _FilterChip(
                     label: _chips[i],
                     selected: _selected == i,
@@ -319,6 +319,6 @@ class _ScriptCard extends StatelessWidget {
 
   // 稳定评分展示：由点赞数推导，落在主流评分区间 8.0~9.4。
   String _score(dynamic s) {
-    return '${(8.0 + (s.likes % 15) / 10.0).toStringAsFixed(1)}';
+    return (8.0 + (s.likes % 15) / 10.0).toStringAsFixed(1);
   }
 }

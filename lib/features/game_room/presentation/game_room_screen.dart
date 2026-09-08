@@ -42,7 +42,7 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
             builder: (context, value, child) =>
                 Opacity(opacity: value, child: child),
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 // 深色渐变底纹兜底：外链地图加载失败/离线时仍保留暗场氛围
                 gradient: LinearGradient(
                   colors: [Color(0xFF2B2340), Color(0xFF0E1017)],
@@ -54,6 +54,8 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
                     'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1200&auto=format&fit=crop',
                   ), // Placeholder map
                   fit: BoxFit.cover,
+                  // 外链加载失败/离线时静默回退到上面的深色渐变底纹。
+                  onError: (_, _) {},
                   colorFilter: ColorFilter.mode(
                     Colors.black38,
                     BlendMode.darken,

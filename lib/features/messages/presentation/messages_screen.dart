@@ -88,7 +88,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   100,
                 ),
                 itemCount: data.length,
-                separatorBuilder: (_, __) => const Divider(
+                separatorBuilder: (_, _) => const Divider(
                   height: 1,
                   color: Colors.white10,
                 ),

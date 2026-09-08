@@ -60,7 +60,7 @@ class _ClueBoardScreenState extends State<ClueBoardScreen> {
                     ),
                     scrollDirection: Axis.horizontal,
                     itemCount: _suspects.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, i) => Entrance(
                       delay: Duration(milliseconds: 80 + i * 50),
                       child: _SuspectCard(name: _suspects[i]),

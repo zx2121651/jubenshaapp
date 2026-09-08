@@ -224,6 +224,7 @@ class _BannerCard extends StatelessWidget {
 
 class Pressable extends StatelessWidget {
   const Pressable({
+    super.key,
     required this.label,
     required this.icon,
     required this.accent,

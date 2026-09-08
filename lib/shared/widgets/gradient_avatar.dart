@@ -54,7 +54,7 @@ class GradientAvatar extends StatelessWidget {
           : Image.network(
               imageUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Center(
+              errorBuilder: (_, _, _) => Center(
                 child: Text(
                   letter,
                   style: TextStyle(
@@ -119,7 +119,7 @@ class GradientCover extends StatelessWidget {
           : Image.network(
               imageUrl!,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Stack(
+              errorBuilder: (_, _, _) => Stack(
                 fit: StackFit.expand,
                 children: [
                   Align(

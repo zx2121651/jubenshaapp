@@ -33,7 +33,7 @@ class _HomeCategoryTabsState extends State<HomeCategoryTabs> {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 6),
+        separatorBuilder: (_, _) => const SizedBox(width: 6),
         itemBuilder: (context, i) {
           final c = _categories[i];
           final selected = _selected == i;

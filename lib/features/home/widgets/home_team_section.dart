@@ -57,7 +57,7 @@ class HomeTeamSection extends StatelessWidget {
             ),
             scrollDirection: Axis.horizontal,
             itemCount: _teams.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, _) => const SizedBox(width: 10),
             itemBuilder: (context, i) =>
                 Entrance(delay: Duration(milliseconds: 60 + i * 60), child: _TeamCard(team: _teams[i])),
           ),

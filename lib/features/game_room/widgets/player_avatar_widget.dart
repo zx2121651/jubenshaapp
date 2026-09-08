@@ -54,6 +54,8 @@ class PlayerAvatarWidget extends StatelessWidget {
                   image: DecorationImage(
                     image: NetworkImage(imageUrl),
                     fit: BoxFit.cover,
+                    // 外链头像加载失败/离线时静默回退到渐变底色。
+                    onError: (_, _) {},
                   ),
                 ),
               ),

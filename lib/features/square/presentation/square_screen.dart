@@ -95,7 +95,7 @@ class _SquareScreenState extends State<SquareScreen> {
                   ),
                   scrollDirection: Axis.horizontal,
                   itemCount: _chips.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (context, i) => _Chip(
                     label: _chips[i],
                     selected: _selected == i,

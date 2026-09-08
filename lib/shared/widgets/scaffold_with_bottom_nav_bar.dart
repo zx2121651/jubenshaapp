@@ -14,17 +14,9 @@ class ScaffoldWithBottomNavBar extends StatefulWidget {
 }
 
 class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
-  // 记录本次切换方向：+1 向右切（新页从右滑入），-1 向左切，0 无方向。
-  int _direction = 0;
-
   StatefulNavigationShell get navigationShell => widget.navigationShell;
 
   void _goBranch(int index) {
-    final cur = navigationShell.currentIndex;
-    setState(() {
-      // 中央主按钮与两侧 tab 的方向判定：目的地大于当前则向右推进。
-      _direction = index > cur ? 1 : (index < cur ? -1 : 0);
-    });
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
@@ -35,46 +27,85 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
   Widget build(BuildContext context) {
     final index = navigationShell.currentIndex;
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: AppMotion.base,
-        switchInCurve: AppMotion.easeOut,
-        switchOutCurve: AppMotion.easeOut,
-        transitionBuilder: (child, anim) {
-          // 方向感知的水平翻页：向右切换时旧页向左让位、新页自右滑入。
-          final enterT = CurvedAnimation(
-            parent: anim,
-            curve: AppMotion.easeOut,
-          );
-          final dx = _direction * 0.12;
-          return FadeTransition(
-            opacity: anim,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: Offset(dx, 0),
-                end: Offset.zero,
-              ).animate(enterT),
-              child: child,
-            ),
-          );
-        },
-        child: KeyedSubtree(
-          key: ValueKey<int>(index),
-          child: Stack(
-            children: [
-              navigationShell,
-              if (index == 0)
-                Positioned(
-                  bottom: 100,
-                  left: MediaQuery.of(context).size.width * 0.2 + 20,
-                  child: const _FloatingTooltip(),
-                ),
-            ],
-          ),
-        ),
+      // 方向感知的翻页过渡：用常驻单子树实现，避免 AnimatedSwitcher
+      // 复制 StatefulNavigationShell 导致 ProviderScope 失效/状态丢失。
+      body: _ShellTransition(
+        index: index,
+        shell: navigationShell,
+        overlay: index == 0
+            ? Positioned(
+                bottom: 100,
+                left: MediaQuery.of(context).size.width * 0.2 + 20,
+                child: const _FloatingTooltip(),
+              )
+            : null,
       ),
       bottomNavigationBar: _AnimatedBottomBar(
         currentIndex: index,
         onDestinationSelected: _goBranch,
+      ),
+    );
+  }
+}
+
+/// 方向感知的翻页过渡：仅在 Tab 变化时重放入场动画，
+/// shell 本身始终挂载，保证各分支（含 Provider）状态稳定。
+class _ShellTransition extends StatefulWidget {
+  const _ShellTransition({
+    required this.shell,
+    required this.index,
+    this.overlay,
+  });
+
+  final StatefulNavigationShell shell;
+  final int index;
+  final Widget? overlay;
+
+  @override
+  State<_ShellTransition> createState() => _ShellTransitionState();
+}
+
+class _ShellTransitionState extends State<_ShellTransition>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: AppMotion.base,
+  );
+
+  // 记录本次切换方向：+1 向右（新页自右滑入），-1 向左。
+  int _direction = 0;
+
+  @override
+  void didUpdateWidget(covariant _ShellTransition oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.index != oldWidget.index) {
+      _direction = widget.index > oldWidget.index ? 1 : -1;
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final curve = CurvedAnimation(parent: _controller, curve: AppMotion.easeOut);
+    return FadeTransition(
+      opacity: curve,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: Offset(_direction * 0.12, 0),
+          end: Offset.zero,
+        ).animate(curve),
+        child: Stack(
+          children: [
+            widget.shell,
+            if (widget.overlay != null) widget.overlay!,
+          ],
+        ),
       ),
     );
   }
@@ -201,12 +232,12 @@ class _CentralActionButton extends StatelessWidget {
         children: [
           // 凸起圆形按钮，向上溢出底栏
           Transform.translate(
-            offset: const Offset(0, -18),
+            offset: const Offset(0, -16),
             child: AnimatedContainer(
               duration: AppMotion.slow,
               curve: AppMotion.bounceOut,
-              width: 58,
-              height: 58,
+              width: 54,
+              height: 54,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
@@ -236,7 +267,7 @@ class _CentralActionButton extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
           const Text(
             '开始游戏',
             style: TextStyle(
