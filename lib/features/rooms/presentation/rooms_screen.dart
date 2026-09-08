@@ -203,15 +203,35 @@ class _ScriptCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    s.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppTheme.onSurface,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          s.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppTheme.onSurface,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.star_rounded,
+                        color: Color(0xFFFFC24B),
+                        size: 16,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        _score(s),
+                        style: const TextStyle(
+                          color: Color(0xFFFFC24B),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -285,5 +305,10 @@ class _ScriptCard extends StatelessWidget {
   String _format(int n) {
     if (n >= 10000) return '${(n / 10000).toStringAsFixed(1)}万';
     return '$n';
+  }
+
+  // 稳定评分展示：由点赞数推导，落在主流评分区间 8.0~9.4。
+  String _score(dynamic s) {
+    return '${(8.0 + (s.likes % 15) / 10.0).toStringAsFixed(1)}';
   }
 }
