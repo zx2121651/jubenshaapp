@@ -13,6 +13,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=60',
       likes: 1250,
+      players: 6,
+      category: '恐怖',
+      durationMins: 270,
     ),
     ScriptModel(
       id: '2',
@@ -24,6 +27,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=60',
       likes: 980,
+      players: 8,
+      category: '阵营',
+      durationMins: 300,
     ),
     ScriptModel(
       id: '3',
@@ -35,6 +41,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=60',
       likes: 2100,
+      players: 5,
+      category: '情感',
+      durationMins: 180,
     ),
     ScriptModel(
       id: '4',
@@ -46,6 +55,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=60',
       likes: 856,
+      players: 4,
+      category: '硬核',
+      durationMins: 210,
     ),
     ScriptModel(
       id: '5',
@@ -57,6 +69,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60',
       likes: 1540,
+      players: 7,
+      category: '惊悚',
+      durationMins: 240,
     ),
     ScriptModel(
       id: '6',
@@ -68,6 +83,9 @@ final scriptListProvider = Provider<List<ScriptModel>>((ref) {
       authorAvatar:
           'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=60',
       likes: 3200,
+      players: 6,
+      category: '欢乐',
+      durationMins: 120,
     ),
   ];
 });

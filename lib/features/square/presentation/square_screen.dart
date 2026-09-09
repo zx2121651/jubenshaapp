@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_motion.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -86,6 +87,8 @@ class _SquareScreenState extends State<SquareScreen> {
                 ),
               ),
             ),
+            // 正在语音 / 开黑中的房间（互动增强）
+            const SliverToBoxAdapter(child: _VoiceRoomSection()),
             SliverToBoxAdapter(
               child: SizedBox(
                 height: 44,
@@ -254,6 +257,279 @@ class _PostCard extends StatelessWidget {
         Text(
           label,
           style: TextStyle(color: color, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+/// 「正在语音 · 开黑中」区：横向语音房间列表，带互动氛围动效。
+class _VoiceRoomSection extends StatelessWidget {
+  const _VoiceRoomSection();
+
+  static const _rooms = [
+    {
+      'title': '晚安硬核开黑',
+      'count': '6人 进行中',
+      'tags': ['硬核', '海龟汤'],
+      'names': ['晓', '阿澈', '老白'],
+    },
+    {
+      'title': '欢乐互怼屋',
+      'count': '4人 进行中',
+      'tags': ['欢乐', '闲聊'],
+      'names': ['桃桃', '阿豪'],
+    },
+    {
+      'title': '推理之夜',
+      'count': '8人 等待中',
+      'tags': ['还原', '新本'],
+      'names': ['十方', 'Niko'],
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            UIConstants.spacingLg,
+            UIConstants.spacingMd,
+            UIConstants.spacingLg,
+            8,
+          ),
+          child: const Row(
+            children: [
+              _LivePulse(),
+              SizedBox(width: 6),
+              Text(
+                '正在语音',
+                style: TextStyle(
+                  color: AppTheme.onSurface,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '开黑中，点进去一起玩',
+                  style: TextStyle(
+                    color: AppTheme.onSurfaceVariant,
+                    fontSize: 11,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(Icons.chevron_right, size: 18, color: Colors.white38),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 150,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UIConstants.spacingLg,
+            ),
+            scrollDirection: Axis.horizontal,
+            itemCount: _rooms.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
+            itemBuilder: (context, i) {
+              final r = _rooms[i];
+              return GestureDetector(
+                onTap: () => context.push('/room/voice$i'),
+                child: Container(
+                  width: 168,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.white10, width: 0.6),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          // 头像堆叠
+                          SizedBox(
+                            height: 26,
+                            child: Stack(
+                              children: [
+                                for (var j = 0; j < (r['names'] as List).length; j++)
+                                  Positioned(
+                                    left: j * 16,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppTheme.surfaceContainerLow,
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: GradientAvatar(
+                                        text: (r['names'] as List)[j] as String,
+                                        size: 26,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          _VoiceWaveBar(),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        r['title'] as String,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppTheme.onSurface,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            (r['count'] as String).contains('等待') 
+                                ? Icons.schedule
+                                : Icons.graphic_eq,
+                            size: 12,
+                            color: (r['count'] as String).contains('等待')
+                                ? Colors.white38
+                                : AppTheme.primaryContainer,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            r['count'] as String,
+                            style: TextStyle(
+                              color: (r['count'] as String).contains('等待')
+                                  ? Colors.white38
+                                  : AppTheme.primaryContainer,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: (r['tags'] as List).map((t) {
+                          return Container(
+                            margin: const EdgeInsets.only(right: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primary.withValues(alpha: 0.14),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              t as String,
+                              style: const TextStyle(
+                                color: AppTheme.primaryContainer,
+                                fontSize: 10,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 4),
+      ],
+    );
+  }
+}
+
+/// 绿色「直播中」圆点脉冲。
+class _LivePulse extends StatefulWidget {
+  const _LivePulse();
+
+  @override
+  State<_LivePulse> createState() => _LivePulseState();
+}
+
+class _LivePulseState extends State<_LivePulse>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1200),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) => Container(
+        width: 12,
+        height: 12,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppTheme.primaryContainer,
+        ),
+        child: Center(
+          child: Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF34C77B),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 语音波形条（静态渐变条，表达说话中的氛围）。
+class _VoiceWaveBar extends StatelessWidget {
+  const _VoiceWaveBar();
+
+  static const _heights = [4.0, 10.0, 6.0, 13.0, 8.0, 5.0, 11.0];
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        for (final h in _heights)
+          Container(
+            width: 3,
+            height: h,
+            margin: const EdgeInsets.symmetric(horizontal: 1),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryContainer,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+        const SizedBox(width: 2),
+        Text(
+          'LIVE',
+          style: TextStyle(
+            color: AppTheme.primaryContainer.withValues(alpha: 0.9),
+            fontSize: 9,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ],
     );

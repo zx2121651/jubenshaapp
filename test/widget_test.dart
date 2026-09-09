@@ -33,8 +33,13 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));
 
-    // Tab 2：互动（中央主按钮）。
+    // Tab 2：中央主按钮 → 弹出「开局准备」组局弹层。
     await tester.tap(find.text('开始游戏'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('开局准备'), findsOneWidget);
+    // 关闭弹层，回到当前 Tab。
+    await tester.tap(find.byIcon(Icons.close));
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));
 

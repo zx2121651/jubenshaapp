@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_motion.dart';
 import '../../core/theme/app_theme.dart';
+import 'create_room_sheet.dart';
 
 class ScaffoldWithBottomNavBar extends StatefulWidget {
   const ScaffoldWithBottomNavBar({super.key, required this.navigationShell});
@@ -20,6 +21,14 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
+    );
+  }
+
+  void _openCreateRoom() {
+    // 中央「开始游戏」→ 沉浸式开局/拼车弹层。
+    showCreateRoomSheet(
+      context,
+      onEnterLobby: () => _goBranch(2),
     );
   }
 
@@ -43,6 +52,7 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
       bottomNavigationBar: _AnimatedBottomBar(
         currentIndex: index,
         onDestinationSelected: _goBranch,
+        onCentralTap: _openCreateRoom,
       ),
     );
   }
@@ -135,10 +145,12 @@ class _AnimatedBottomBar extends StatelessWidget {
   const _AnimatedBottomBar({
     required this.currentIndex,
     required this.onDestinationSelected,
+    required this.onCentralTap,
   });
 
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
+  final VoidCallback onCentralTap;
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +216,7 @@ class _AnimatedBottomBar extends StatelessWidget {
                 // 中央主按钮：一键开组，纵向压住底栏
                 _CentralActionButton(
                   selected: currentIndex == 2,
-                  onTap: () => onDestinationSelected(2),
+                  onTap: onCentralTap,
                 ),
               ],
             ),
