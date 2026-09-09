@@ -4,6 +4,7 @@
 // 注意：首页头像区含无限循环的 Breathe 动画，不能使用 pumpAndSettle，
 // 因此这里用分段 pump 等待入场/翻页动画完成；任何 RenderFlex 溢出等
 // 布局异常都会自动导致测试失败。
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
