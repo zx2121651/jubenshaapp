@@ -145,7 +145,7 @@ export default function Dashboard() {
               <List
                 dataSource={published}
                 renderItem={(a) => (
-                  <List.Item>
+                  <List.Item key={a.id}>
                     <List.Item.Meta
                       title={
                         <Space>

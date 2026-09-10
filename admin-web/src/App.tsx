@@ -9,6 +9,7 @@ import Scripts from './pages/Scripts'
 import Rooms from './pages/Rooms'
 import Permissions from './pages/Permissions'
 import Announcements from './pages/Announcements'
+import Reviews from './pages/Reviews'
 import Logs from './pages/Logs'
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -39,6 +40,7 @@ function App() {
         <Route path="rooms" element={<Rooms />} />
         <Route path="permissions" element={<Permissions />} />
         <Route path="announcements" element={<Announcements />} />
+        <Route path="reviews" element={<Reviews />} />
         <Route path="logs" element={<Logs />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

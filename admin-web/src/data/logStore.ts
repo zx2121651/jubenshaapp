@@ -1,7 +1,7 @@
 // 操作日志（审计）微型 store：模块级数组 + 订阅，供各页面记录后台操作。
 import { useSyncExternalStore } from 'react'
 
-export type LogType = 'auth' | 'user' | 'script' | 'room' | 'announcement'
+export type LogType = 'auth' | 'user' | 'script' | 'room' | 'announcement' | 'review'
 
 export interface LogEntry {
   id: number

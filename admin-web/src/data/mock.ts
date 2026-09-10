@@ -83,13 +83,16 @@ export const permissionSchema = [
   '剧本管理',
   '房间管理',
   '权限管理',
+  '公告管理',
+  '评论管理',
+  '操作日志',
 ]
 
 export const roleMatrix = [
-  { role: '超级管理员', color: '#7c5cff', perms: [true, true, true, true, true] },
-  { role: '运营', color: '#37c99a', perms: [true, true, true, true, false] },
-  { role: '客服', color: '#e0a63c', perms: [true, true, false, false, false] },
-  { role: '内容审核', color: '#eb5aa7', perms: [false, false, true, true, false] },
+  { role: '超级管理员', color: '#7c5cff', perms: [true, true, true, true, true, true, true, true] },
+  { role: '运营', color: '#37c99a', perms: [true, true, true, true, false, true, true, true] },
+  { role: '客服', color: '#e0a63c', perms: [true, true, false, false, false, true, false, true] },
+  { role: '内容审核', color: '#eb5aa7', perms: [false, false, true, true, false, false, true, false] },
 ]
 
 // 看板指标与趋势。
@@ -137,4 +140,28 @@ export const announcements: AnnouncementRow[] = [
   { id: 'A103', title: '新剧本《雪夜列车》上线', type: 'update', status: 'published', content: '硬核本格新作《雪夜列车》已上架，6-10 人本，时长约 4.5 小时，适合进阶及以上玩家挑战。', publishTime: '2026-09-03 10:00', createTime: '2026-09-02 11:00' },
   { id: 'A104', title: '作者投稿奖励规则调整（草稿）', type: 'update', status: 'draft', content: '拟调整作者投稿奖励：优质剧本首月上架额外获得曝光位，具体细则待评审会后公布。', publishTime: '-', createTime: '2026-09-09 20:10' },
   { id: 'A105', title: '国庆活动方案', type: 'activity', status: 'offline', content: '国庆七天乐活动方案草拟稿，含充值返利、组局任务等玩法，暂缓发布。', publishTime: '2026-09-01 08:00', createTime: '2026-08-30 09:40' },
+]
+
+export type ReviewStatus = 'pending' | 'approved' | 'rejected'
+
+export interface ReviewRow {
+  id: string
+  scriptTitle: string
+  userName: string
+  rating: number
+  content: string
+  status: ReviewStatus
+  reportCount: number
+  time: string
+}
+
+export const reviews: ReviewRow[] = [
+  { id: 'C201', scriptTitle: '暗杀网络小说家', userName: '草莓甜心派', rating: 5, content: '推理线非常严谨，最后一幕反转惊艳，凶手隐藏得很好，推荐硬核玩家！', status: 'approved', reportCount: 0, time: '2026-09-10 20:31' },
+  { id: 'C202', scriptTitle: '血色婚礼', userName: '露水之情', rating: 4, content: '氛围感拉满，恐怖本里情感描写居然也不错，就是时长偏长容易累。', status: 'pending', reportCount: 1, time: '2026-09-10 19:12' },
+  { id: 'C203', scriptTitle: '豪门恩怨', userName: '掌灯人', rating: 5, content: '欢乐撕逼本天花板，适合老玩家聚会，笑到肚子疼。', status: 'approved', reportCount: 0, time: '2026-09-10 18:03' },
+  { id: 'C204', scriptTitle: '孤岛疑云', userName: '夜枭', rating: 2, content: '逻辑硬伤太多，关键线索全靠主持人扶车，体验一般。', status: 'pending', reportCount: 3, time: '2026-09-10 17:40' },
+  { id: 'C205', scriptTitle: '雪夜列车', userName: '灰暗先生', rating: 5, content: '硬核玩家的盛宴，剧本结构精巧，复盘后直呼过瘾！', status: 'pending', reportCount: 0, time: '2026-09-10 16:55' },
+  { id: 'C206', scriptTitle: '钟楼怪谈', userName: '南巷', rating: 1, content: '完全不符合预期，剧情注水严重，不推荐浪费钱。', status: 'approved', reportCount: 2, time: '2026-09-10 15:20' },
+  { id: 'C207', scriptTitle: '轮回棋局', userName: '十一', rating: 4, content: '设定很有意思，可惜最后环节的节奏稍显拖沓。', status: 'rejected', reportCount: 5, time: '2026-09-10 14:08' },
+  { id: 'C208', scriptTitle: '迷雾剧场', userName: '墨笔', rating: 5, content: '沉浸感一流，剧场的氛围设计非常棒，新手友好但深度足够。', status: 'approved', reportCount: 0, time: '2026-09-10 12:45' },
 ]

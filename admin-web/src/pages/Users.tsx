@@ -15,12 +15,13 @@ import {
   Tag,
 } from 'antd'
 import type { TableProps } from 'antd'
-import { EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { EditOutlined, PlusOutlined, SearchOutlined, DownloadOutlined } from '@ant-design/icons'
 import { users } from '../data/mock'
 import type { UserRow } from '../data/mock'
 import { usePersistentState } from '../hooks/usePersistentState'
 import { pushLog } from '../data/logStore'
 import { useAuth } from '../auth/AuthContext'
+import { exportCsv } from '../utils/exportCsv'
 
 const roleColor: Record<string, string> = {
   玩家: 'default',
@@ -94,6 +95,15 @@ export default function Users() {
     message.success(`${id} ${banned ? '已封禁' : '已解封'}（模拟操作）`)
   }
 
+  const doExport = () => {
+    exportCsv(
+      `用户列表_${new Date().toISOString().slice(0, 10)}.csv`,
+      ['ID', '昵称', '手机号', '角色', '侦探等级', '积分', '状态', '注册时间'],
+      rows.map((u) => [u.id, u.name, u.phone, u.role, u.level, u.score, u.status === 'normal' ? '正常' : '已封禁', u.regDate]),
+    )
+    message.success(`已导出 ${rows.length} 条用户（模拟操作）`)
+  }
+
   const columns: TableProps<UserRow>['columns'] = [
     {
       title: '用户',
@@ -149,9 +159,14 @@ export default function Users() {
       <Card
         title="用户管理"
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
-            新建账号
-          </Button>
+          <Space>
+            <Button icon={<DownloadOutlined />} onClick={doExport}>
+              导出 CSV
+            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
+              新建账号
+            </Button>
+          </Space>
         }
       >
         <Space style={{ marginBottom: 16 }}>

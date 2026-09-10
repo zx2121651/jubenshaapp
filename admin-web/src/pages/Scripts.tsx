@@ -19,12 +19,13 @@ import {
   Typography,
 } from 'antd'
 import type { TableProps } from 'antd'
-import { CheckOutlined, EyeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { CheckOutlined, EyeOutlined, PlusOutlined, SearchOutlined, DownloadOutlined } from '@ant-design/icons'
 import { scripts } from '../data/mock'
 import type { ScriptRow } from '../data/mock'
 import { usePersistentState } from '../hooks/usePersistentState'
 import { pushLog } from '../data/logStore'
 import { useAuth } from '../auth/AuthContext'
+import { exportCsv } from '../utils/exportCsv'
 
 const categoryList = [...new Set(scripts.map((s) => s.category))]
 
@@ -97,6 +98,15 @@ export default function Scripts() {
     detailForm.setFieldsValue(r)
   }
 
+  const doExport = () => {
+    exportCsv(
+      `剧本列表_${new Date().toISOString().slice(0, 10)}.csv`,
+      ['ID', '剧本名称', '作者', '分类', '难度', '时长(秒)', '价格(元)', '游玩数', '评分', '状态'],
+      rows.map((s) => [s.id, s.title, s.author, s.category, s.difficulty, s.duration, s.price, s.plays, s.rating, statusMeta[s.status].label]),
+    )
+    message.success(`已导出 ${rows.length} 个剧本（模拟操作）`)
+  }
+
   const saveDetail = () => {
     if (!detail) return
     detailForm.validateFields().then((values) => {
@@ -160,6 +170,9 @@ export default function Scripts() {
         title="剧本管理"
         extra={
           <Space>
+            <Button icon={<DownloadOutlined />} onClick={doExport}>
+              导出 CSV
+            </Button>
             <Button icon={<SearchOutlined />}>导入剧本</Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => { setOpen(true); form.resetFields() }}>
               新建剧本
