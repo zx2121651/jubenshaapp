@@ -18,6 +18,9 @@ import type { TableProps } from 'antd'
 import { CheckOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { scripts } from '../data/mock'
 import type { ScriptRow } from '../data/mock'
+import { usePersistentState } from '../hooks/usePersistentState'
+import { pushLog } from '../data/logStore'
+import { useAuth } from '../auth/AuthContext'
 
 const categoryList = [...new Set(scripts.map((s) => s.category))]
 
@@ -29,10 +32,11 @@ const statusMeta: Record<ScriptRow['status'], { color: string; label: string }> 
 
 export default function Scripts() {
   const { modal, message } = App.useApp()
+  const { user } = useAuth()
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState<string>('all')
   const [status, setStatus] = useState<string>('all')
-  const [data, setData] = useState(scripts)
+  const [data, setData] = usePersistentState<ScriptRow[]>('admin_scripts', scripts)
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
   const [form] = Form.useForm()
@@ -49,12 +53,14 @@ export default function Scripts() {
 
   const toggleStatus = (id: string, action: ScriptRow['status']) => {
     setData((d) => d.map((s) => (s.id === id ? { ...s, status: action } : s)))
-    const label = action === 'online' ? '通过并上架' : '下架'
+    const label = action === 'online' ? '通过并上架' : action === 'offline' ? '下架' : '设为待审核'
+    pushLog({ type: 'script', actor: user ?? '管理员', action: action === 'online' ? '审核通过' : action === 'offline' ? '下架' : '状态调整', detail: `剧本 ${id} ${label}` })
     modal.success({ title: `${label}成功`, content: `剧本 ${id} 已${label}（模拟操作）` })
   }
 
   const batchApprove = () => {
     setData((d) => d.map((s) => (selected.includes(s.id) ? { ...s, status: 'online' } : s)))
+    pushLog({ type: 'script', actor: user ?? '管理员', action: '批量上架', detail: `对 ${selected.length} 部待审核剧本审核通过` })
     modal.success({ title: '批量上架', content: `已对 ${selected.length} 部待审核剧本执行通过（模拟操作）` })
     setSelected([])
   }
@@ -70,6 +76,7 @@ export default function Scripts() {
       setData((d) => [row, ...d])
       setOpen(false)
       form.resetFields()
+      pushLog({ type: 'script', actor: user ?? '管理员', action: '提交剧本', detail: `新增剧本「${values.title}」${row.id}（待审核）` })
       message.success(`已新增剧本「${values.title}」（待审核）`)
     })
   }

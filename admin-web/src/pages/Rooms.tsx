@@ -1,9 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { App, Button, Card, Progress, Space, Table, Tag } from 'antd'
 import type { TableProps } from 'antd'
 import { ReloadOutlined, StopOutlined } from '@ant-design/icons'
 import { rooms } from '../data/mock'
 import type { RoomRow } from '../data/mock'
+import { usePersistentState } from '../hooks/usePersistentState'
+import { pushLog } from '../data/logStore'
+import { useAuth } from '../auth/AuthContext'
 
 const statusMeta: Record<RoomRow['status'], { color: string; label: string }> = {
   waiting: { color: 'gold', label: '等待开局' },
@@ -13,7 +16,8 @@ const statusMeta: Record<RoomRow['status'], { color: string; label: string }> = 
 
 export default function Rooms() {
   const { modal } = App.useApp()
-  const [data, setData] = useState(rooms)
+  const { user } = useAuth()
+  const [data, setData] = usePersistentState<RoomRow[]>('admin_rooms', rooms)
 
   const stats = useMemo(() => {
     const active = data.filter((r) => r.status === 'in-progress').length
@@ -28,6 +32,7 @@ export default function Rooms() {
       content: `剧本《${r.script}》当前 ${r.players} 名玩家将全部退出，此操作不可撤销。`,
       onOk: () => {
         setData((d) => d.filter((x) => x.id !== r.id))
+        pushLog({ type: 'room', actor: user ?? '管理员', action: '强制解散', detail: `房间 ${r.id}《${r.script}》${r.players} 名玩家已退出` })
         modal.success({ title: '已解散', content: `房间 ${r.id} 已强制解散（模拟操作）` })
       },
     })

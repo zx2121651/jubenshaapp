@@ -18,6 +18,9 @@ import type { TableProps } from 'antd'
 import { EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { users } from '../data/mock'
 import type { UserRow } from '../data/mock'
+import { usePersistentState } from '../hooks/usePersistentState'
+import { pushLog } from '../data/logStore'
+import { useAuth } from '../auth/AuthContext'
 
 const roleColor: Record<string, string> = {
   玩家: 'default',
@@ -28,9 +31,11 @@ const roleColor: Record<string, string> = {
 
 export default function Users() {
   const { message } = App.useApp()
+  const { user } = useAuth()
   const [keyword, setKeyword] = useState('')
   const [role, setRole] = useState<string>('all')
-  const [data, setData] = useState(users)
+  const [showBanned, setShowBanned] = useState(false)
+  const [data, setData] = usePersistentState<UserRow[]>('admin_users', users)
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<UserRow | null>(null)
   const [form] = Form.useForm()
@@ -40,9 +45,10 @@ export default function Users() {
       const kw = keyword.trim().toLowerCase()
       const matchKw = !kw || u.name.toLowerCase().includes(kw) || u.phone.includes(kw)
       const matchRole = role === 'all' || u.role === role
-      return matchKw && matchRole
+      const matchBan = showBanned || u.status === 'normal'
+      return matchKw && matchRole && matchBan
     })
-  }, [data, keyword, role])
+  }, [data, keyword, role, showBanned])
 
   const openCreate = () => {
     setEditing(null)
@@ -60,6 +66,7 @@ export default function Users() {
     form.validateFields().then((values) => {
       if (editing) {
         setData((d) => d.map((u) => (u.id === editing.id ? { ...u, ...values } : u)))
+        pushLog({ type: 'user', actor: user ?? '管理员', action: '编辑用户', detail: `修改用户 ${editing.id}「${values.name}」资料` })
         message.success(`已更新用户 ${editing.id}（模拟操作）`)
       } else {
         const newRow: UserRow = {
@@ -71,6 +78,7 @@ export default function Users() {
           ...values,
         }
         setData((d) => [newRow, ...d])
+        pushLog({ type: 'user', actor: user ?? '管理员', action: '新增用户', detail: `创建账号「${values.name}」${newRow.id}` })
         message.success(`已新增用户「${values.name}」（模拟操作）`)
       }
       setOpen(false)
@@ -78,9 +86,11 @@ export default function Users() {
   }
 
   const toggle = (id: string, banned: boolean) => {
+    const target = data.find((u) => u.id === id)
     setData((d) =>
       d.map((u) => (u.id === id ? { ...u, status: banned ? 'banned' : 'normal' } : u)),
     )
+    pushLog({ type: 'user', actor: user ?? '管理员', action: banned ? '封禁用户' : '解封用户', detail: `${banned ? '封禁' : '解封'} ${id}「${target?.name ?? ''}」` })
     message.success(`${id} ${banned ? '已封禁' : '已解封'}（模拟操作）`)
   }
 
@@ -165,12 +175,11 @@ export default function Users() {
             ]}
           />
           <Switch
-            checkedChildren="含封禁"
-            unCheckedChildren="隐藏封禁"
-            onChange={(checked) =>
-              setData(checked ? users : users.filter((u) => u.status === 'normal'))
-            }
-          />
+          checkedChildren="含封禁"
+          unCheckedChildren="隐藏封禁"
+          checked={showBanned}
+          onChange={setShowBanned}
+        />
         </Space>
         <Table
           rowKey="id"

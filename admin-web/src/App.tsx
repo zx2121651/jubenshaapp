@@ -8,6 +8,7 @@ import Users from './pages/Users'
 import Scripts from './pages/Scripts'
 import Rooms from './pages/Rooms'
 import Permissions from './pages/Permissions'
+import Logs from './pages/Logs'
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user } = useAuth()
@@ -36,6 +37,7 @@ function App() {
         <Route path="scripts" element={<Scripts />} />
         <Route path="rooms" element={<Rooms />} />
         <Route path="permissions" element={<Permissions />} />
+        <Route path="logs" element={<Logs />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

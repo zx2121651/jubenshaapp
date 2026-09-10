@@ -8,12 +8,14 @@ import {
   BookOutlined,
   AppstoreOutlined,
   SafetyOutlined,
+  FileSearchOutlined,
   BellOutlined,
   UserOutlined,
   MoonOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
 import { useAuth } from '../auth/AuthContext'
+import { pushLog } from '../data/logStore'
 
 const { Sider, Header, Content } = Layout
 
@@ -23,6 +25,7 @@ const items = [
   { key: '/scripts', icon: <BookOutlined />, label: '剧本管理' },
   { key: '/rooms', icon: <AppstoreOutlined />, label: '房间 / 组局' },
   { key: '/permissions', icon: <SafetyOutlined />, label: '权限管理' },
+  { key: '/logs', icon: <FileSearchOutlined />, label: '操作日志' },
 ]
 
 const userMenu: MenuProps['items'] = [
@@ -100,6 +103,7 @@ export default function AdminLayout() {
                 items: userMenu,
                 onClick: ({ key }) => {
                   if (key === 'logout') {
+                    pushLog({ type: 'auth', actor: user ?? '管理员', action: '退出登录', detail: '登出后台系统' })
                     logout()
                     navigate('/login', { replace: true })
                   } else if (key === 'profile') {

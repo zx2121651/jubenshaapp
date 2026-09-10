@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { App, Button, Checkbox, Input, Form, Typography } from 'antd'
 import { LockOutlined, UserOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 import { useAuth } from '../auth/AuthContext'
+import { pushLog } from '../data/logStore'
 
 export default function Login() {
   const { login } = useAuth()
@@ -15,6 +16,12 @@ export default function Login() {
     // 模拟登录：任意非空账号即可，默认填充管理员。
     setTimeout(() => {
       login(values.username.trim() || '超级管理员')
+      pushLog({
+        type: 'auth',
+        actor: values.username.trim() || '超级管理员',
+        action: '登录系统',
+        detail: '通过账号密码进入后台',
+      })
       setLoading(false)
       message.success(`欢迎回来，${values.username.trim() || '超级管理员'}`)
       navigate('/dashboard', { replace: true })
