@@ -96,6 +96,44 @@ void main() {
     appRouter.go('/room/123');
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('剧本阅读阶段'), findsOneWidget);
+    // 阶段推进：搜证 → 讨论 → 投票。
+    await tester.tap(find.text('下一阶段'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('搜证阶段'), findsOneWidget);
+    await tester.tap(find.text('下一阶段'));
+    await tester.pump(const Duration(milliseconds: 400));
+    // 投票弹层可用：选中玩家后可确认。
+    await tester.tap(find.text('投票'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.ensureVisible(find.byKey(const ValueKey('vote-张林路')));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.byKey(const ValueKey('vote-张林路')));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('确认投票'), findsOneWidget);
+    // 关闭投票弹层。
+    await tester.tap(find.text('确认投票'));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // 线索板可用：展开线索 → 搜证收集 → 计数更新。
+    await tester.tap(find.text('线索'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('线索板'), findsOneWidget);
+    expect(find.text('已搜证 0/8'), findsOneWidget);
+    // 展开第一条线索并搜证。
+    await tester.ensureVisible(find.text('染血的台灯'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.text('染血的台灯'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.ensureVisible(find.text('搜证'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.text('搜证'));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('已搜证 1/8'), findsOneWidget);
+    expect(find.text('已搜证'), findsOneWidget);
+    // 关闭线索板（点击遮罩层空白处）。
+    await tester.tapAt(const Offset(40, 40));
+    await tester.pump(const Duration(milliseconds: 400));
 
     // 二级页面：推理白板。
     appRouter.go('/clue-board/123');

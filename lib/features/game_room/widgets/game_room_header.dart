@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
+/// 顶部信息头：房间信息 + 阶段进度 + 阶段推进按钮。
 class GameRoomHeader extends StatelessWidget {
-  const GameRoomHeader({super.key});
+  const GameRoomHeader({
+    super.key,
+    required this.stageIndex,
+    required this.stageCount,
+    required this.stageLabel,
+    required this.stageColor,
+    this.onNextStage,
+  });
+
+  final int stageIndex;
+  final int stageCount;
+  final String stageLabel;
+  final Color stageColor;
+  final VoidCallback? onNextStage;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +24,7 @@ class GameRoomHeader extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
           children: [
-            // Top small status row (Room ID, WiFi, Battery)
+            // 顶部小状态行（房间号 / WiFi / 电量）
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: const [
@@ -25,7 +39,7 @@ class GameRoomHeader extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            // Main Header Block
+            // 主信息块
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12.0,
@@ -37,81 +51,81 @@ class GameRoomHeader extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  // Left side info
+                  // 左侧信息
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '剧本阅读阶段',
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 250),
                           style: TextStyle(
-                            color: Colors.amber,
+                            color: stageColor,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
+                          child: Text(stageLabel),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Row(
-                          children: const [
-                            Icon(
+                          children: [
+                            const Icon(
                               Icons.menu_book,
                               color: Colors.white,
                               size: 12,
                             ),
-                            SizedBox(width: 4),
-                            Text(
+                            const SizedBox(width: 4),
+                            const Text(
                               '暗杀网络小说家...',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
                             ),
-                            SizedBox(width: 8),
-                            Icon(
-                              Icons.visibility,
-                              color: Colors.white,
-                              size: 12,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              '1',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                            const SizedBox(width: 8),
+                            // 阶段进度点
+                            for (var i = 0; i < stageCount; i++)
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                margin: const EdgeInsets.only(right: 4),
+                                width: i <= stageIndex ? 14 : 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: i <= stageIndex
+                                      ? stageColor
+                                      : Colors.white24,
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
-
-                  // Right side icons & button
+                  // 右侧图标与按钮
                   Row(
                     children: [
-                      const Icon(
-                        Icons.volume_up,
-                        color: Colors.white,
-                        size: 24,
-                      ),
+                      const Icon(Icons.volume_up, color: Colors.white, size: 24),
                       const SizedBox(width: 12),
                       const Icon(Icons.settings, color: Colors.white, size: 24),
                       const SizedBox(width: 16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFAC5AF0), // Purple button
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          '下一阶段',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: onNextStage,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFAC5AF0),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            stageIndex + 1 >= stageCount ? '重开一局' : '下一阶段',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -121,7 +135,7 @@ class GameRoomHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            // Subtitle pill
+            // 副标题药丸
             Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(
