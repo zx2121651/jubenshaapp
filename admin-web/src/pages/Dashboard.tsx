@@ -1,4 +1,4 @@
-import { Card, Col, Row, Statistic, Tag } from 'antd'
+import { Card, Col, Row, Space, Statistic, Tag, Empty, List } from 'antd'
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -21,6 +21,8 @@ import {
   Legend,
 } from 'recharts'
 import { dashMetrics, trendData, categoryDist } from '../data/mock'
+import type { AnnouncementType } from '../data/mock'
+import { useAnnouncements } from '../data/announcementStore'
 
 const icons: Record<string, React.ReactNode> = {
   users: <UserOutlined />,
@@ -31,7 +33,18 @@ const icons: Record<string, React.ReactNode> = {
 
 const PIEColors = ['#7c5cff', '#eb5aa7', '#37c99a', '#4dc8ff', '#ffb020']
 
+const annTypeMeta: Record<AnnouncementType, { color: string; label: string }> = {
+  system: { color: 'blue', label: '系统' },
+  activity: { color: 'magenta', label: '活动' },
+  update: { color: 'cyan', label: '更新' },
+}
+
 export default function Dashboard() {
+  const announcements = useAnnouncements()
+  const published = announcements
+    .filter((a) => a.status === 'published')
+    .slice(0, 4)
+
   return (
     <div>
       <Row gutter={[16, 16]}>
@@ -121,6 +134,36 @@ export default function Dashboard() {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+        <Col span={24}>
+          <Card title="平台公告">
+            {published.length ? (
+              <List
+                dataSource={published}
+                renderItem={(a) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      title={
+                        <Space>
+                          <Tag color={annTypeMeta[a.type].color}>{annTypeMeta[a.type].label}</Tag>
+                          <span>{a.title}</span>
+                        </Space>
+                      }
+                      description={a.content}
+                    />
+                    <span style={{ color: 'rgba(255,255,255,.35)', fontSize: 12 }}>
+                      {a.publishTime}
+                    </span>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <Empty description="暂无已发布公告" />
+            )}
           </Card>
         </Col>
       </Row>

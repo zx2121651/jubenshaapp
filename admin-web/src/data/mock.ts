@@ -36,17 +36,20 @@ export interface ScriptRow {
   plays: number
   rating: number
   status: ScriptStatus
+  desc: string
+  price: number
+  tags: string[]
 }
 
 export const scripts: ScriptRow[] = [
-  { id: 'S101', title: '暗杀网络小说家', author: '墨笔', category: '推理', difficulty: '进阶', duration: 300, plays: 12840, rating: 4.8, status: 'online' },
-  { id: 'S102', title: '血色婚礼', author: '十一', category: '恐怖', difficulty: '困难', duration: 360, plays: 9321, rating: 4.6, status: 'online' },
-  { id: 'S103', title: '孤岛疑云', author: '白夜川', category: '推理', difficulty: '新手', duration: 240, plays: 15204, rating: 4.5, status: 'online' },
-  { id: 'S104', title: '钟楼怪谈', author: '掌灯人', category: '惊悚', difficulty: '进阶', duration: 300, plays: 6110, rating: 4.2, status: 'offline' },
-  { id: 'S105', title: '豪门恩怨', author: '南巷', category: '情感', difficulty: '新手', duration: 240, plays: 18977, rating: 4.9, status: 'online' },
-  { id: 'S106', title: '轮回棋局', author: '夜枭', category: '科幻', difficulty: '困难', duration: 360, plays: 4488, rating: 4.0, status: 'pending' },
-  { id: 'S107', title: '雪夜列车', author: '赫赫什么', category: '推理', difficulty: '进阶', duration: 270, plays: 7355, rating: 4.4, status: 'online' },
-  { id: 'S108', title: '迷雾剧场', author: '灰暗先生', category: '惊悚', difficulty: '新手', duration: 210, plays: 12110, rating: 4.7, status: 'pending' },
+  { id: 'S101', title: '暗杀网络小说家', author: '墨笔', category: '推理', difficulty: '进阶', duration: 300, plays: 12840, rating: 4.8, status: 'online', desc: '一场发生在作家公寓的离奇凶案，七名嫌疑人各怀秘密，真相藏在被撕碎的手稿之中。', price: 88, tags: ['本格', '密室', '还原'] },
+  { id: 'S102', title: '血色婚礼', author: '十一', category: '恐怖', difficulty: '困难', duration: 360, plays: 9321, rating: 4.6, status: 'online', desc: '婚礼现场的突然死亡，让宾客席变成审讯室。爱与恨交织，人人都有动机。', price: 98, tags: ['变格', '恐怖', '情感'] },
+  { id: 'S103', title: '孤岛疑云', author: '白夜川', category: '推理', difficulty: '新手', duration: 240, plays: 15204, rating: 4.5, status: 'online', desc: '风暴将至的孤岛旅馆，十二名旅客被困于此，凶手就藏在其中。', price: 78, tags: ['本格', '暴风雪山庄'] },
+  { id: 'S104', title: '钟楼怪谈', author: '掌灯人', category: '惊悚', difficulty: '进阶', duration: 300, plays: 6110, rating: 4.2, status: 'offline', desc: '钟楼敲响第十二下时，迷雾中出现的身影带走了最后一个证人。', price: 88, tags: ['变格', '惊悚', '沉浸'] },
+  { id: 'S105', title: '豪门恩怨', author: '南巷', category: '情感', difficulty: '新手', duration: 240, plays: 18977, rating: 4.9, status: 'online', desc: '豪门家族遗产争夺夜，老爷子留下一句遗言，恩怨在此终结。', price: 68, tags: ['情感', '豪门', '欢乐'] },
+  { id: 'S106', title: '轮回棋局', author: '夜枭', category: '科幻', difficulty: '困难', duration: 360, plays: 4488, rating: 4.0, status: 'pending', desc: '一局无法结束的棋局，执棋者陷入循环，唯有找出破局之人。', price: 108, tags: ['科幻', '烧脑', '进阶'] },
+  { id: 'S107', title: '雪夜列车', author: '赫赫什么', category: '推理', difficulty: '进阶', duration: 270, plays: 7355, rating: 4.4, status: 'online', desc: '暴雪夜的高原列车，乘客与乘务员之间暗流涌动，一场精心策划的谋杀正在上演。', price: 92, tags: ['本格', '密室', '硬核'] },
+  { id: 'S108', title: '迷雾剧场', author: '灰暗先生', category: '惊悚', difficulty: '新手', duration: 210, plays: 12110, rating: 4.7, status: 'pending', desc: '剧场落幕之后，主演倒在舞台中央，幕后黑手藏在观众席之间。', price: 72, tags: ['变格', '剧场', '新手'] },
 ]
 
 export type RoomStatus = 'waiting' | 'in-progress' | 'finished'
@@ -113,4 +116,25 @@ export const categoryDist = [
   { name: '情感', value: 96 },
   { name: '惊悚', value: 45 },
   { name: '科幻', value: 58 },
+]
+
+export type AnnouncementType = 'system' | 'activity' | 'update'
+export type AnnouncementStatus = 'draft' | 'published' | 'offline'
+
+export interface AnnouncementRow {
+  id: string
+  title: string
+  type: AnnouncementType
+  status: AnnouncementStatus
+  content: string
+  publishTime: string
+  createTime: string
+}
+
+export const announcements: AnnouncementRow[] = [
+  { id: 'A101', title: '平台服务器例行维护公告', type: 'system', status: 'published', content: '为提升对局稳定性，平台将于今晚 02:00-04:00 进行例行维护，期间暂停组局与匹配，请合理安排游戏时间。', publishTime: '2026-09-08 09:00', createTime: '2026-09-07 15:30' },
+  { id: 'A102', title: '中秋主题活动「月圆之夜」上线', type: 'activity', status: 'published', content: '中秋限定剧本《月圆之夜》限时上架，参与活动局可赢取限定头像框与积分翻倍奖励，活动持续至 9 月 20 日。', publishTime: '2026-09-05 12:00', createTime: '2026-09-04 18:20' },
+  { id: 'A103', title: '新剧本《雪夜列车》上线', type: 'update', status: 'published', content: '硬核本格新作《雪夜列车》已上架，6-10 人本，时长约 4.5 小时，适合进阶及以上玩家挑战。', publishTime: '2026-09-03 10:00', createTime: '2026-09-02 11:00' },
+  { id: 'A104', title: '作者投稿奖励规则调整（草稿）', type: 'update', status: 'draft', content: '拟调整作者投稿奖励：优质剧本首月上架额外获得曝光位，具体细则待评审会后公布。', publishTime: '-', createTime: '2026-09-09 20:10' },
+  { id: 'A105', title: '国庆活动方案', type: 'activity', status: 'offline', content: '国庆七天乐活动方案草拟稿，含充值返利、组局任务等玩法，暂缓发布。', publishTime: '2026-09-01 08:00', createTime: '2026-08-30 09:40' },
 ]

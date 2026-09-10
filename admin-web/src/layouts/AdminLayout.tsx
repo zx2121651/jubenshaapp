@@ -8,6 +8,7 @@ import {
   BookOutlined,
   AppstoreOutlined,
   SafetyOutlined,
+  NotificationOutlined,
   FileSearchOutlined,
   BellOutlined,
   UserOutlined,
@@ -25,6 +26,7 @@ const items = [
   { key: '/scripts', icon: <BookOutlined />, label: '剧本管理' },
   { key: '/rooms', icon: <AppstoreOutlined />, label: '房间 / 组局' },
   { key: '/permissions', icon: <SafetyOutlined />, label: '权限管理' },
+  { key: '/announcements', icon: <NotificationOutlined />, label: '公告管理' },
   { key: '/logs', icon: <FileSearchOutlined />, label: '操作日志' },
 ]
 

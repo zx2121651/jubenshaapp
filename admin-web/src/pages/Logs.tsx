@@ -11,6 +11,7 @@ const typeMeta: Record<LogType, { color: string; label: string }> = {
   user: { color: 'cyan', label: '用户' },
   script: { color: 'gold', label: '剧本' },
   room: { color: 'green', label: '房间' },
+  announcement: { color: 'blue', label: '公告' },
 }
 
 export default function Logs() {
@@ -59,6 +60,7 @@ export default function Logs() {
             { value: 'user', label: '用户' },
             { value: 'script', label: '剧本' },
             { value: 'room', label: '房间' },
+            { value: 'announcement', label: '公告' },
           ]}
         />
       </Space>
