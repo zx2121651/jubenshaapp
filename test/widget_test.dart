@@ -147,6 +147,44 @@ void main() {
     // 关闭线索板（点击遮罩层空白处）。
     await tester.tapAt(const Offset(40, 40));
     await tester.pump(const Duration(milliseconds: 400));
+    // 等待投票 Snackbar 完全消退（含退场动画）避免遮挡底部栏。
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 400));
+    // 二次确认底部栏「笔记」可被点击，防止残留 Snackbar 遮挡。
+    await tester.ensureVisible(find.text('笔记'));
+    await tester.pump(const Duration(milliseconds: 200));
+
+    // 推理笔记可用：查看已有记录、新增一条。
+    await tester.tap(find.text('笔记'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('推理笔记'), findsOneWidget);
+    expect(find.text('3 条记录'), findsOneWidget);
+    // 新增一条笔记。
+    await tester.enterText(find.byType(TextField).last, '时间线：来电与遇害仅隔 1 分钟');
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('4 条记录'), findsOneWidget);
+    expect(find.text('时间线：来电与遇害仅隔 1 分钟'), findsOneWidget);
+    // 关闭笔记弹层。
+    await tester.tapAt(const Offset(40, 40));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // 语音房可用：显示当事人、切换闭麦。
+    await tester.tap(find.text('语音'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('语音房'), findsOneWidget);
+    expect(find.text('爱丽丝 正在发言'), findsOneWidget);
+    expect(find.text('按住说话'), findsOneWidget);
+    await tester.ensureVisible(find.text('闭麦'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.text('闭麦'));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('按住说话'), findsOneWidget);
+    // 关闭语音房弹层。
+    await tester.tapAt(const Offset(40, 40));
+    await tester.pump(const Duration(milliseconds: 400));
 
     // 二级页面：推理白板。
     appRouter.go('/clue-board/123');

@@ -5,6 +5,8 @@ import '../widgets/player_avatar_widget.dart';
 import '../widgets/game_chat_overlay.dart';
 import '../widgets/game_bottom_bar.dart';
 import '../widgets/script_reader_sheet.dart';
+import '../widgets/notes_sheet.dart';
+import '../widgets/voice_room_sheet.dart';
 
 /// 游戏阶段定义。
 class GameStage {
@@ -71,6 +73,26 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => const ScriptReaderSheet(),
+    );
+  }
+
+  void _showVoiceSheet() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const VoiceRoomSheet(),
+    );
+  }
+
+  void _showNotesSheet() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const NotesSheet(),
     );
   }
 
@@ -215,6 +237,8 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
               onVote: _showVoteSheet,
               onClue: _showClueBoard,
               onScript: _showScriptSheet,
+              onNotes: _showNotesSheet,
+              onVoice: _showVoiceSheet,
             ),
           ),
         ],

@@ -5,11 +5,20 @@ import '../../../shared/widgets/animations.dart';
 /// 底部操作栏：语音 / 剧本 / 线索 / 投票 / 礼物 / 笔记。
 /// 交互化：线索与投票回调生效，其余给出轻反馈。
 class GameBottomBar extends StatelessWidget {
-  const GameBottomBar({super.key, this.onVote, this.onClue, this.onScript});
+  const GameBottomBar({
+    super.key,
+    this.onVote,
+    this.onClue,
+    this.onScript,
+    this.onNotes,
+    this.onVoice,
+  });
 
   final VoidCallback? onVote;
   final VoidCallback? onClue;
   final VoidCallback? onScript;
+  final VoidCallback? onNotes;
+  final VoidCallback? onVoice;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class GameBottomBar extends StatelessWidget {
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-            _action(Icons.mic_none, '语音', Colors.amber, onTap: () {
+            _action(Icons.mic_none, '语音', Colors.amber, onTap: onVoice ?? () {
               _toast(context, '麦克风状态：默认闭麦，点击发言');
             }),
             _action(Icons.description_outlined, '剧本', Colors.white, onTap: onScript ?? () {
@@ -38,7 +47,7 @@ class GameBottomBar extends StatelessWidget {
             _action(Icons.card_giftcard, '礼物', const Color(0xFFE0647C), onTap: () {
               _toast(context, '礼物会场已开启，挑一份吧');
             }),
-            _action(Icons.edit_note_outlined, '笔记', Colors.white, onTap: () {
+            _action(Icons.edit_note_outlined, '笔记', Colors.white, onTap: onNotes ?? () {
               _toast(context, '本局笔记：共有 4 条记录');
             }),
           ],
