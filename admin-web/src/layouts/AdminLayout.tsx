@@ -11,7 +11,9 @@ import {
   BellOutlined,
   UserOutlined,
   MoonOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons'
+import { useAuth } from '../auth/AuthContext'
 
 const { Sider, Header, Content } = Layout
 
@@ -26,13 +28,14 @@ const items = [
 const userMenu: MenuProps['items'] = [
   { key: 'profile', icon: <UserOutlined />, label: '个人中心' },
   { type: 'divider' },
-  { key: 'logout', label: '退出登录', danger: true },
+  { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', danger: true },
 ]
 
 export default function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const { token } = theme.useToken()
+  const { user, logout } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
 
   const selectedKey =
@@ -92,10 +95,24 @@ export default function AdminLayout() {
                 <MoonOutlined />
               </span>
             </Space>
-            <Dropdown menu={{ items: userMenu }}>
+            <Dropdown
+              menu={{
+                items: userMenu,
+                onClick: ({ key }) => {
+                  if (key === 'logout') {
+                    logout()
+                    navigate('/login', { replace: true })
+                  } else if (key === 'profile') {
+                    navigate('/permissions')
+                  }
+                },
+              }}
+            >
               <Space style={{ cursor: 'pointer' }}>
-                <Avatar style={{ background: '#7c5cff' }}>管</Avatar>
-                <span style={{ color: token.colorText }}>超级管理员</span>
+                <Avatar style={{ background: '#7c5cff' }}>
+                  {user?.charAt(0) ?? '管'}
+                </Avatar>
+                <span style={{ color: token.colorText }}>{user ?? '管理员'}</span>
               </Space>
             </Dropdown>
           </Space>

@@ -1,27 +1,41 @@
 import { useMemo, useState } from 'react'
-import { App, Button, Card, Input, Rate, Select, Space, Table, Tag, Tooltip } from 'antd'
+import {
+  App,
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Rate,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+} from 'antd'
 import type { TableProps } from 'antd'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { CheckOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { scripts } from '../data/mock'
 import type { ScriptRow } from '../data/mock'
 
 const categoryList = [...new Set(scripts.map((s) => s.category))]
 
-const statusMeta: Record<
-  ScriptRow['status'],
-  { color: string; label: string }
-> = {
+const statusMeta: Record<ScriptRow['status'], { color: string; label: string }> = {
   online: { color: 'green', label: '已上架' },
   offline: { color: 'default', label: '已下架' },
   pending: { color: 'gold', label: '待审核' },
 }
 
 export default function Scripts() {
-  const { modal } = App.useApp()
+  const { modal, message } = App.useApp()
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState<string>('all')
   const [status, setStatus] = useState<string>('all')
   const [data, setData] = useState(scripts)
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<string[]>([])
+  const [form] = Form.useForm()
 
   const rows = useMemo(() => {
     return data.filter((s) => {
@@ -39,13 +53,30 @@ export default function Scripts() {
     modal.success({ title: `${label}成功`, content: `剧本 ${id} 已${label}（模拟操作）` })
   }
 
+  const batchApprove = () => {
+    setData((d) => d.map((s) => (selected.includes(s.id) ? { ...s, status: 'online' } : s)))
+    modal.success({ title: '批量上架', content: `已对 ${selected.length} 部待审核剧本执行通过（模拟操作）` })
+    setSelected([])
+  }
+
+  const create = () => {
+    form.validateFields().then((values) => {
+      const row: ScriptRow = {
+        id: `S${Math.floor(100 + Math.random() * 900)}`,
+        plays: 0,
+        status: 'pending',
+        ...values,
+      }
+      setData((d) => [row, ...d])
+      setOpen(false)
+      form.resetFields()
+      message.success(`已新增剧本「${values.title}」（待审核）`)
+    })
+  }
+
   const columns: TableProps<ScriptRow>['columns'] = [
     { title: 'ID', dataIndex: 'id' },
-    {
-      title: '剧本名称',
-      dataIndex: 'title',
-      render: (v: string) => <b>{v}</b>,
-    },
+    { title: '剧本名称', dataIndex: 'title', render: (v: string) => <b>{v}</b> },
     { title: '作者', dataIndex: 'author' },
     { title: '分类', dataIndex: 'category' },
     { title: '难度', dataIndex: 'difficulty' },
@@ -60,9 +91,7 @@ export default function Scripts() {
     {
       title: '状态',
       dataIndex: 'status',
-      render: (v: ScriptRow['status']) => (
-        <Tag color={statusMeta[v].color}>{statusMeta[v].label}</Tag>
-      ),
+      render: (v: ScriptRow['status']) => <Tag color={statusMeta[v].color}>{statusMeta[v].label}</Tag>,
     },
     {
       title: '操作',
@@ -78,10 +107,7 @@ export default function Scripts() {
           </Space>
         ) : (
           <Tooltip title="切换上架状态">
-            <Button
-              size="small"
-              onClick={() => toggleStatus(r.id, r.status === 'online' ? 'offline' : 'online')}
-            >
+            <Button size="small" onClick={() => toggleStatus(r.id, r.status === 'online' ? 'offline' : 'online')}>
               {r.status === 'online' ? '下架' : '上架'}
             </Button>
           </Tooltip>
@@ -90,45 +116,95 @@ export default function Scripts() {
   ]
 
   return (
-    <Card
-      title="剧本管理"
-      extra={
-        <Space>
-          <Button>导入剧本</Button>
-          <Button type="primary" icon={<PlusOutlined />}>
-            新建剧本
-          </Button>
+    <>
+      <Card
+        title="剧本管理"
+        extra={
+          <Space>
+            <Button icon={<SearchOutlined />}>导入剧本</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => { setOpen(true); form.resetFields() }}>
+              新建剧本
+            </Button>
+          </Space>
+        }
+      >
+        <Space style={{ marginBottom: 16 }}>
+          <Input
+            allowClear
+            prefix={<SearchOutlined />}
+            placeholder="搜索剧本"
+            style={{ width: 220 }}
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <Select
+            style={{ width: 140 }}
+            value={category}
+            onChange={setCategory}
+            options={[{ value: 'all', label: '全部分类' }, ...categoryList.map((c) => ({ value: c, label: c }))]}
+          />
+          <Select
+            style={{ width: 140 }}
+            value={status}
+            onChange={setStatus}
+            options={[
+              { value: 'all', label: '全部状态' },
+              { value: 'online', label: '已上架' },
+              { value: 'offline', label: '已下架' },
+              { value: 'pending', label: '待审核' },
+            ]}
+          />
+          {selected.length > 0 && (
+            <Button type="primary" icon={<CheckOutlined />} onClick={batchApprove}>
+              批量通过（{selected.length}）
+            </Button>
+          )}
         </Space>
-      }
-    >
-      <Space style={{ marginBottom: 16 }}>
-        <Input
-          allowClear
-          prefix={<SearchOutlined />}
-          placeholder="搜索剧本"
-          style={{ width: 220 }}
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={rows}
+          pagination={{ pageSize: 6 }}
+          rowSelection={{
+            selectedRowKeys: selected,
+            onChange: (keys) => setSelected(keys as string[]),
+            getCheckboxProps: (r) => ({ disabled: r.status !== 'pending' }),
+          }}
         />
-        <Select
-          style={{ width: 140 }}
-          value={category}
-          onChange={setCategory}
-          options={[{ value: 'all', label: '全部分类' }, ...categoryList.map((c) => ({ value: c, label: c }))]}
-        />
-        <Select
-          style={{ width: 140 }}
-          value={status}
-          onChange={setStatus}
-          options={[
-            { value: 'all', label: '全部状态' },
-            { value: 'online', label: '已上架' },
-            { value: 'offline', label: '已下架' },
-            { value: 'pending', label: '待审核' },
-          ]}
-        />
-      </Space>
-      <Table rowKey="id" columns={columns} dataSource={rows} pagination={{ pageSize: 6 }} />
-    </Card>
+      </Card>
+
+      <Modal
+        title="新建剧本"
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={create}
+        okText="提交审核"
+        cancelText="取消"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="title" label="剧本名称" rules={[{ required: true, message: '请输入名称' }]}>
+            <Input placeholder="如：雪夜列车" />
+          </Form.Item>
+          <Form.Item name="author" label="作者" rules={[{ required: true }]}>
+            <Input placeholder="作者昵称" />
+          </Form.Item>
+          <Form.Item name="category" label="分类" rules={[{ required: true, message: '请选择分类' }]}>
+            <Select
+              placeholder="请选择分类"
+              options={categoryList.map((c) => ({ value: c, label: c }))}
+            />
+          </Form.Item>
+          <Form.Item name="difficulty" label="难度" rules={[{ required: true, message: '请选择难度' }]}>
+            <Select
+              placeholder="请选择难度"
+              options={['新手', '进阶', '困难'].map((v) => ({ value: v, label: v }))}
+            />
+          </Form.Item>
+          <Form.Item name="duration" label="时长（秒）">
+            <InputNumber min={60} max={720} step={30} style={{ width: '100%' }} />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
