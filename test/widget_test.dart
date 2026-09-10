@@ -77,6 +77,21 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(milliseconds: 600));
 
+    // 全局搜索：首页入口 → 搜索 → 结果 → 回退。
+    appRouter.go('/');
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 400));
+    appRouter.go('/search');
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.enterText(find.byType(TextField).last, '恐怖');
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('血色婚礼'), findsOneWidget);
+    // 返回首页。
+    appRouter.go('/');
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 400));
+
     // 二级页面：游戏房。
     appRouter.go('/room/123');
     await tester.pump(const Duration(milliseconds: 100));

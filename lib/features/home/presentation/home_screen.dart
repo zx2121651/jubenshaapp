@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/animations.dart';
@@ -129,7 +130,7 @@ class _HomeSearchEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return PressScale(
       pressedScale: 0.97,
-      onTap: () {},
+      onTap: () => context.push('/search'),
       child: Container(
         height: 38,
         padding: const EdgeInsets.symmetric(horizontal: 14),

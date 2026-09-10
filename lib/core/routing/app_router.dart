@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/search/presentation/search_screen.dart';
 import '../../features/rooms/presentation/rooms_screen.dart';
 import '../../features/square/presentation/square_screen.dart';
 import '../../features/messages/presentation/messages_screen.dart';
@@ -78,6 +79,11 @@ final appRouter = GoRouter(
         final id = state.pathParameters['id']!;
         return ScriptDetailScreen(scriptId: id);
       },
+    ),
+    GoRoute(
+      path: '/search',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SearchScreen(),
     ),
     GoRoute(
       path: '/chat/:userName',
