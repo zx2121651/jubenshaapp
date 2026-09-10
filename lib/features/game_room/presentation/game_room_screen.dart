@@ -4,6 +4,7 @@ import '../widgets/game_room_header.dart';
 import '../widgets/player_avatar_widget.dart';
 import '../widgets/game_chat_overlay.dart';
 import '../widgets/game_bottom_bar.dart';
+import '../widgets/script_reader_sheet.dart';
 
 /// 游戏阶段定义。
 class GameStage {
@@ -60,6 +61,16 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => const _ClueBoardSheet(),
+    );
+  }
+
+  void _showScriptSheet() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const ScriptReaderSheet(),
     );
   }
 
@@ -203,6 +214,7 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
             child: GameBottomBar(
               onVote: _showVoteSheet,
               onClue: _showClueBoard,
+              onScript: _showScriptSheet,
             ),
           ),
         ],

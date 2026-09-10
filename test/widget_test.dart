@@ -101,6 +101,19 @@ void main() {
     await tester.tap(find.text('下一阶段'));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('搜证阶段'), findsOneWidget);
+    // 剧本阅读可用：打开个人剧本并切换公共剧本。
+    await tester.tap(find.text('剧本'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('《暗杀网络小说家》'), findsOneWidget);
+    expect(find.text('仅你可见 · 阅读完毕请销毁，勿向他人透露'), findsOneWidget);
+    await tester.ensureVisible(find.text('公共剧本'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.text('公共剧本'));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('案发经过'), findsOneWidget);
+    // 关闭剧本弹层。
+    await tester.tap(find.byIcon(Icons.close).last);
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('下一阶段'));
     await tester.pump(const Duration(milliseconds: 400));
     // 投票弹层可用：选中玩家后可确认。

@@ -5,10 +5,11 @@ import '../../../shared/widgets/animations.dart';
 /// 底部操作栏：语音 / 剧本 / 线索 / 投票 / 礼物 / 笔记。
 /// 交互化：线索与投票回调生效，其余给出轻反馈。
 class GameBottomBar extends StatelessWidget {
-  const GameBottomBar({super.key, this.onVote, this.onClue});
+  const GameBottomBar({super.key, this.onVote, this.onClue, this.onScript});
 
   final VoidCallback? onVote;
   final VoidCallback? onClue;
+  final VoidCallback? onScript;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +25,12 @@ class GameBottomBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
             _action(Icons.mic_none, '语音', Colors.amber, onTap: () {
               _toast(context, '麦克风状态：默认闭麦，点击发言');
             }),
-            _action(Icons.description_outlined, '剧本', Colors.white, onTap: () {
+            _action(Icons.description_outlined, '剧本', Colors.white, onTap: onScript ?? () {
               _toast(context, '剧本保留篇目：暗杀网络小说家');
             }),
             _action(Icons.hub_outlined, '线索', Colors.white, onTap: onClue),
