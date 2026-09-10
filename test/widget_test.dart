@@ -186,6 +186,21 @@ void main() {
     await tester.tapAt(const Offset(40, 40));
     await tester.pump(const Duration(milliseconds: 400));
 
+    // 礼物会场可用：挑礼物 → 选对象 → 送出。
+    await tester.tap(find.text('礼物'));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('礼物会场'), findsOneWidget);
+    expect(find.text('余额 2600'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('gift-玫瑰')));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('请选择对象'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('to-鹿鸣')));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('送出 玫瑰 给 鹿鸣'), findsOneWidget);
+    // 关闭礼物弹层。
+    await tester.tapAt(const Offset(40, 40));
+    await tester.pump(const Duration(milliseconds: 400));
+
     // 二级页面：推理白板。
     appRouter.go('/clue-board/123');
     await tester.pump(const Duration(milliseconds: 100));

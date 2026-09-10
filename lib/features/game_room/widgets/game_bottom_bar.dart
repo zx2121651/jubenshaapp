@@ -12,6 +12,7 @@ class GameBottomBar extends StatelessWidget {
     this.onScript,
     this.onNotes,
     this.onVoice,
+    this.onGift,
   });
 
   final VoidCallback? onVote;
@@ -19,6 +20,7 @@ class GameBottomBar extends StatelessWidget {
   final VoidCallback? onScript;
   final VoidCallback? onNotes;
   final VoidCallback? onVoice;
+  final VoidCallback? onGift;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class GameBottomBar extends StatelessWidget {
             }),
             _action(Icons.hub_outlined, '线索', Colors.white, onTap: onClue),
             _voteAction(context),
-            _action(Icons.card_giftcard, '礼物', const Color(0xFFE0647C), onTap: () {
+            _action(Icons.card_giftcard, '礼物', const Color(0xFFE0647C), onTap: onGift ?? () {
               _toast(context, '礼物会场已开启，挑一份吧');
             }),
             _action(Icons.edit_note_outlined, '笔记', Colors.white, onTap: onNotes ?? () {

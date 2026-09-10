@@ -7,6 +7,7 @@ import '../widgets/game_bottom_bar.dart';
 import '../widgets/script_reader_sheet.dart';
 import '../widgets/notes_sheet.dart';
 import '../widgets/voice_room_sheet.dart';
+import '../widgets/gift_panel_sheet.dart';
 
 /// 游戏阶段定义。
 class GameStage {
@@ -96,7 +97,17 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
     );
   }
 
-  Future<void> _showVoteSheet() async {
+  void _showGiftSheet() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const GiftPanelSheet(),
+    );
+  }
+
+  void _showVoteSheet() async {
     HapticFeedback.selectionClick();
     final picked = await showModalBottomSheet<String>(
       context: context,
@@ -239,6 +250,7 @@ class _GameRoomScreenState extends State<GameRoomScreen> {
               onScript: _showScriptSheet,
               onNotes: _showNotesSheet,
               onVoice: _showVoiceSheet,
+              onGift: _showGiftSheet,
             ),
           ),
         ],
