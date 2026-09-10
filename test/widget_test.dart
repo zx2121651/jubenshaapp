@@ -49,6 +49,17 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));
 
+    // 私信点进聊天详情页。
+    await tester.tap(find.text('露水之情'));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('对呀，玩了三年多剧本了～'), findsOneWidget);
+    expect(find.text('输入消息…'), findsOneWidget);
+    // 返回消息中心。
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+
     // Tab 4：我的，应有侦探等级卡。
     await tester.tap(find.text('我的'));
     await tester.pump(const Duration(milliseconds: 400));

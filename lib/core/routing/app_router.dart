@@ -5,6 +5,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/rooms/presentation/rooms_screen.dart';
 import '../../features/square/presentation/square_screen.dart';
 import '../../features/messages/presentation/messages_screen.dart';
+import '../../features/messages/presentation/chat_detail_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/scripts/presentation/script_detail_screen.dart';
 import '../../features/game_room/presentation/game_room_screen.dart';
@@ -76,6 +77,14 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final id = state.pathParameters['id']!;
         return ScriptDetailScreen(scriptId: id);
+      },
+    ),
+    GoRoute(
+      path: '/chat/:userName',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final userName = state.pathParameters['userName']!;
+        return ChatDetailScreen(userName: userName);
       },
     ),
     GoRoute(

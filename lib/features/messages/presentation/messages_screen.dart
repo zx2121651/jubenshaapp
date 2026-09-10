@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_motion.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -99,7 +100,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     pressedScale: 0.96,
                     child: _isNotices
                         ? _NoticeTile(item: data[index])
-                        : _ConversationTile(item: data[index]),
+                        : GestureDetector(
+                            onTap: () => context.push(
+                              '/chat/${data[index]['user']}',
+                            ),
+                            child: _ConversationTile(item: data[index]),
+                          ),
                   ),
                 ),
               ),
