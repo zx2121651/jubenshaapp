@@ -111,7 +111,7 @@ export default function AdminLayout() {
                     logout()
                     navigate('/login', { replace: true })
                   } else if (key === 'profile') {
-                    navigate('/permissions')
+                    navigate('/profile')
                   }
                 },
               }}

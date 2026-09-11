@@ -7,6 +7,8 @@ import {
   AppstoreOutlined,
   WalletOutlined,
 } from '@ant-design/icons'
+import { useLogs } from '../data/logStore'
+import type { LogType } from '../data/logStore'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -19,8 +21,10 @@ import {
   Pie,
   Cell,
   Legend,
+  BarChart,
+  Bar,
 } from 'recharts'
-import { dashMetrics, trendData, categoryDist } from '../data/mock'
+import { dashMetrics, trendData, categoryDist, scripts } from '../data/mock'
 import type { AnnouncementType } from '../data/mock'
 import { useAnnouncements } from '../data/announcementStore'
 
@@ -39,11 +43,22 @@ const annTypeMeta: Record<AnnouncementType, { color: string; label: string }> = 
   update: { color: 'cyan', label: '更新' },
 }
 
+const logTypeMeta: Record<LogType, { color: string; label: string }> = {
+  auth: { color: 'blue', label: '认证' },
+  user: { color: 'purple', label: '用户' },
+  script: { color: 'cyan', label: '剧本' },
+  room: { color: 'gold', label: '房间' },
+  announcement: { color: 'magenta', label: '公告' },
+  review: { color: 'green', label: '评论' },
+}
+
 export default function Dashboard() {
   const announcements = useAnnouncements()
   const published = announcements
     .filter((a) => a.status === 'published')
     .slice(0, 4)
+  const hotScripts = [...scripts].sort((a, b) => b.plays - a.plays).slice(0, 5)
+  const recentLogs = useLogs().slice(0, 6)
 
   return (
     <div>
@@ -90,6 +105,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,.08)" />
                 <XAxis dataKey="day" stroke="rgba(255,255,255,.4)" />
                 <YAxis stroke="rgba(255,255,255,.4)" />
+                <YAxis orientation="right" yAxisId="right" stroke="#ffb020" />
                 <Tooltip />
                 <Legend />
                 <Area
@@ -106,6 +122,14 @@ export default function Dashboard() {
                   stroke="#4dc8ff"
                   fill="transparent"
                   strokeDasharray="4 4"
+                />
+                <Area
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="revenue"
+                  name="营收(元)"
+                  stroke="#ffb020"
+                  fill="transparent"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -140,6 +164,22 @@ export default function Dashboard() {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col span={24}>
+          <Card title="热门剧本 Top5（按游玩数）">
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={hotScripts} margin={{ top: 8, left: -16, right: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,.08)" />
+                <XAxis dataKey="title" stroke="rgba(255,255,255,.4)" />
+                <YAxis stroke="rgba(255,255,255,.4)" />
+                <Tooltip />
+                <Bar dataKey="plays" name="游玩数" fill="#7c5cff" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+        <Col xs={24} xl={14}>
           <Card title="平台公告">
             {published.length ? (
               <List
@@ -163,6 +203,35 @@ export default function Dashboard() {
               />
             ) : (
               <Empty description="暂无已发布公告" />
+            )}
+          </Card>
+        </Col>
+        <Col xs={24} xl={10}>
+          <Card title="最新操作动态">
+            {recentLogs.length ? (
+              <List
+                dataSource={recentLogs}
+                renderItem={(l) => (
+                  <List.Item key={l.id}>
+                    <List.Item.Meta
+                      title={
+                        <Space>
+                          <Tag color={logTypeMeta[l.type].color}>{logTypeMeta[l.type].label}</Tag>
+                          <span>{l.action}</span>
+                        </Space>
+                      }
+                      description={<span style={{ fontSize: 12, color: 'rgba(255,255,255,.55)' }}>{l.detail}</span>}
+                    />
+                    <span style={{ color: 'rgba(255,255,255,.35)', fontSize: 12 }}>
+                      {l.actor}
+                      <br />
+                      {l.time}
+                    </span>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <Empty description="暂无操作记录" />
             )}
           </Card>
         </Col>
