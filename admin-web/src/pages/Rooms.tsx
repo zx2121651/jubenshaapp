@@ -1,7 +1,14 @@
-import { useMemo } from 'react'
-import { App, Button, Card, Progress, Space, Table, Tag } from 'antd'
+import { useMemo, useState } from 'react'
+import { App, Button, Card, Col, Input, Progress, Row, Select, Space, Statistic, Table, Tag } from 'antd'
 import type { TableProps } from 'antd'
-import { ReloadOutlined, StopOutlined } from '@ant-design/icons'
+import {
+  ReloadOutlined,
+  StopOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  TeamOutlined,
+  RiseOutlined,
+} from '@ant-design/icons'
 import { rooms } from '../data/mock'
 import type { RoomRow } from '../data/mock'
 import { usePersistentState } from '../hooks/usePersistentState'
@@ -17,14 +24,32 @@ const statusMeta: Record<RoomRow['status'], { color: string; label: string }> = 
 export default function Rooms() {
   const { modal } = App.useApp()
   const { user } = useAuth()
+  const [keyword, setKeyword] = useState('')
+  const [status, setStatus] = useState<string>('all')
   const [data, setData] = usePersistentState<RoomRow[]>('admin_rooms', rooms)
 
   const stats = useMemo(() => {
     const active = data.filter((r) => r.status === 'in-progress').length
     const waiting = data.filter((r) => r.status === 'waiting').length
+    const finished = data.filter((r) => r.status === 'finished').length
     const total = data.length
-    return { active, waiting, total }
+    const filled = data.reduce((s, r) => s + r.players, 0)
+    const cap = data.reduce((s, r) => s + r.capacity, 0)
+    return { active, waiting, finished, total, occupancy: cap ? Math.round((filled / cap) * 100) : 0 }
   }, [data])
+
+  const rows = useMemo(() => {
+    const kw = keyword.trim().toLowerCase()
+    return data.filter((r) => {
+      const matchKw =
+        !kw ||
+        r.id.toLowerCase().includes(kw) ||
+        r.script.toLowerCase().includes(kw) ||
+        r.host.toLowerCase().includes(kw)
+      const matchS = status === 'all' || r.status === status
+      return matchKw && matchS
+    })
+  }, [data, keyword, status])
 
   const dismiss = (r: RoomRow) => {
     modal.confirm({
@@ -36,6 +61,11 @@ export default function Rooms() {
         modal.success({ title: '已解散', content: `房间 ${r.id} 已强制解散（模拟操作）` })
       },
     })
+  }
+
+  const refresh = () => {
+    setKeyword('')
+    setStatus('all')
   }
 
   const columns: TableProps<RoomRow>['columns'] = [
@@ -85,14 +115,56 @@ export default function Rooms() {
   return (
     <Card
       title="房间 / 组局管理"
-      extra={<Button icon={<ReloadOutlined />}>刷新</Button>}
+      extra={<Button icon={<ReloadOutlined />} onClick={refresh}>刷新</Button>}
     >
-      <Space size={16} style={{ marginBottom: 16 }}>
+      <Row gutter={[16, 16]}>
+        <Col xs={12} sm={6}>
+          <Card size="small">
+            <Statistic title="进行中" value={stats.active} valueStyle={{ color: '#37c99a' }} prefix={<RiseOutlined />} />
+          </Card>
+        </Col>
+        <Col xs={12} sm={6}>
+          <Card size="small">
+            <Statistic title="等待开局" value={stats.waiting} valueStyle={{ color: '#e0a63c' }} prefix={<ClockCircleOutlined />} />
+          </Card>
+        </Col>
+        <Col xs={12} sm={6}>
+          <Card size="small">
+            <Statistic title="已结束" value={stats.finished} valueStyle={{ color: 'rgba(255,255,255,.7)' }} prefix={<CheckCircleOutlined />} />
+          </Card>
+        </Col>
+        <Col xs={12} sm={6}>
+          <Card size="small">
+            <Statistic title="整体上座率" value={stats.occupancy} suffix="%" valueStyle={{ color: '#7c5cff' }} prefix={<TeamOutlined />} />
+          </Card>
+        </Col>
+      </Row>
+
+      <Space style={{ margin: '16px 0' }}>
+        <Input
+          allowClear
+          prefix={<TeamOutlined />}
+          placeholder="搜索房间号 / 剧本 / 房主"
+          style={{ width: 240 }}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+        <Select
+          style={{ width: 130 }}
+          value={status}
+          onChange={setStatus}
+          options={[
+            { value: 'all', label: '全部状态' },
+            { value: 'waiting', label: '等待开局' },
+            { value: 'in-progress', label: '进行中' },
+            { value: 'finished', label: '已结束' },
+          ]}
+        />
         <Tag color="green">进行中 {stats.active}</Tag>
         <Tag color="gold">等待开局 {stats.waiting}</Tag>
         <Tag>共 {stats.total} 局</Tag>
       </Space>
-      <Table rowKey="id" columns={columns} dataSource={data} pagination={{ pageSize: 6 }} />
+      <Table rowKey="id" columns={columns} dataSource={rows} pagination={{ pageSize: 6 }} />
     </Card>
   )
 }
